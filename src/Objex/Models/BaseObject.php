@@ -12,15 +12,19 @@ namespace Objex\Models;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity @ORM\Table(name="objects")
+ * @ORM\Entity(repositoryClass="Objex\API\Object\ObjectRepository")
+ * @ORM\Table(name="objects")
  **/
-class Object
+class BaseObject
 {
     /** @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue **/
     protected $id;
 
     /** @ORM\Column(type="string") **/
     protected $name;
+
+    /** @ORM\Column(type="json") **/
+    protected $data;
 
     /**
      * @return mixed
@@ -44,6 +48,22 @@ class Object
     public function setName($name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setData(array $data): void
+    {
+        $this->data = $data;
     }
 
 

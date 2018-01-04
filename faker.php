@@ -10,8 +10,11 @@ $sc = include "src/bootstrap/services.php";
 
 $newProductName = $argv[1];
 
-$product = new \Objex\Models\Object();
+$product = new \Objex\Models\BaseObject();
 $product->setName($newProductName);
+$product->setData([
+    'foo' => 'bar'
+]);
 
 $sc->get('orm')->persist($product);
 $sc->get('orm')->flush();
