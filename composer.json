@@ -5,9 +5,17 @@
         "symfony/http-kernel": "^4.0",
         "phpunit/phpunit": "^6.5",
         "symfony/event-dispatcher": "^4.0",
-        "symfony/dependency-injection": "^4.0"
+        "symfony/dependency-injection": "^4.0",
+        "symfony/console": "^4.0",
+        "doctrine/orm": "^2.6"
     },
     "autoload": {
-        "psr-4": { "": "src/" }
+        "psr-4": { "": "src/" },
+        "files": [
+            "src/config/database.php"
+        ]
+    },
+    "require-dev": {
+        "symfony/maker-bundle": "^1.0"
     }
 }

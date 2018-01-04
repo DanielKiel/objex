@@ -10,9 +10,9 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
 
-$routes = $routes = include __DIR__.'/../src/routes.php';
+$sc = include __DIR__.'/../src/bootstrap/services.php';
 
-$sc = include __DIR__.'/../src/bootstrap.php';
+
 
 $request = Request::createFromGlobals();
 

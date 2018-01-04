@@ -12,7 +12,14 @@ use Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpKernel;
 use Symfony\Component\Routing;
 use Symfony\Component\EventDispatcher;
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Objex\App;
+
+$routes = include __DIR__.'/../routes.php';
 
 $sc = new DependencyInjection\ContainerBuilder();
 $sc->register('context', Routing\RequestContext::class);
@@ -37,6 +44,23 @@ $sc->register('dispatcher', EventDispatcher\EventDispatcher::class)
     ->addMethodCall('addSubscriber', array(new Reference('listener.response')))
     ->addMethodCall('addSubscriber', array(new Reference('listener.exception')))
 ;
+
+
+//------- some doctrine experiments
+$paths            = CONFIG_DATABASE_ENTITY_PATHS;
+$isDevMode        = false;
+$connectionParams = CONFIG_DATABASE_CONNECTION;
+
+$config = Setup::createConfiguration($isDevMode);
+$driver = new AnnotationDriver(new AnnotationReader(), $paths);
+
+// registering noop annotation autoloader - allow all annotations by default
+AnnotationRegistry::registerLoader('class_exists');
+$config->setMetadataDriverImpl($driver);
+
+//$entityManager = EntityManager::create($connectionParams, $config);
+$sc->set('orm', EntityManager::create($connectionParams, $config));
+
 $sc->register('app', App::class)
     ->setArguments(array(
         new Reference('dispatcher'),
