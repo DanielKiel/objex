@@ -6,13 +6,25 @@
  * Time: 14:31
  */
 if (! function_exists('objex')) {
+    /**
+     * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+     */
     function objex()  {
         return include __DIR__.'/../../../bootstrap/services.php';
     }
 }
 
 if (! function_exists('saveObject')) {
-    function saveObject($namespace, array $data = []) {
+    /**
+     * @param string $namespace
+     * @param array $data
+     * @return mixed
+     * @throws Exception
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     */
+    function saveObject(string $namespace, array $data = []) {
         return objex()
             ->get('orm')
             ->getRepository('Objex\Models\BaseObject')
@@ -21,7 +33,16 @@ if (! function_exists('saveObject')) {
 }
 
 if (! function_exists('deleteObject')) {
-    function deleteObject($namespace, int $id) {
+    /**
+     * @param string $namespace
+     * @param int $id
+     * @return mixed
+     * @throws Exception
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     */
+    function deleteObject(string $namespace, int $id) {
         return objex()
             ->get('orm')
             ->getRepository('Objex\Models\BaseObject')
@@ -30,7 +51,16 @@ if (! function_exists('deleteObject')) {
 }
 
 if (! function_exists('bulkObjects')) {
-    function bulkObjects($namespace, array $data = []) {
+    /**
+     * @param string $namespace
+     * @param array $data
+     * @return mixed
+     * @throws Exception
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     */
+    function bulkObjects(string $namespace, array $data = []) {
         return objex()
             ->get('orm')
             ->getRepository('Objex\Models\BaseObject')

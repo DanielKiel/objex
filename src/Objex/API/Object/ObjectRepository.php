@@ -18,14 +18,14 @@ class ObjectRepository extends EntityRepository implements ObjectContract
 {
     use Pagination;
 
-//    public function getAll($limit)
-//    {
-//        $query = 'Select o.data as obj From Objex\\Models\\BaseObject o  ORDER BY o.id DESC';
-//
-//        $query = $this->getEntityManager()->createQuery($query);
-//        $query->setMaxResults($limit);
-//        return $query->getResult();
-//    }
+    public function getAll($limit)
+    {
+        $query = 'Select o.data as obj From Objex\\Models\\BaseObject o  ORDER BY o.id DESC';
+
+        $query = $this->getEntityManager()->createQuery($query);
+        $query->setMaxResults($limit);
+        return $query->getResult();
+    }
 
     /**
      * @param string $namespace
@@ -34,6 +34,10 @@ class ObjectRepository extends EntityRepository implements ObjectContract
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     public function save(string $namespace, array $data = [])
     {

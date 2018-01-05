@@ -94,6 +94,4 @@ class BaseObject
         $this->schema = $schema;
     }
 
-
-
 }

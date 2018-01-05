@@ -12,11 +12,8 @@ use Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpKernel;
 use Symfony\Component\Routing;
 use Symfony\Component\EventDispatcher;
-use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\EventManager;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Proxy\ProxyFactory;
 use Objex\App;
@@ -69,7 +66,7 @@ if ('development' === $applicationMode) {
     $config->setAutoGenerateProxyClasses(ProxyFactory::AUTOGENERATE_EVAL);
 }
 
-$sc->set('orm', EntityManager::create( CONFIG_DATABASE_CONNECTION, $config));
+$sc->set('orm', EntityManager::create( CONFIG_DATABASE_CONNECTION, $config, new EventManager()));
 //-------------------
 
 $sc->register('app', App::class)
@@ -80,5 +77,13 @@ $sc->register('app', App::class)
         new Reference('argument_resolver'),
     ))
 ;
+
+//that is the main event to hook into the framework at the actual dev: write subscriber to Modules!
+foreach (MODULES as $module) {
+    $sc->get('dispatcher')->addSubscriber(new $module);
+}
+
+$sc->get('dispatcher')->dispatch('booting', new \Objex\Core\Events\Booting($sc));
+
 
 return $sc;

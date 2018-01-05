@@ -8,10 +8,14 @@
 
 if (! function_exists('getSchema')) {
     /**
-     * @param $namespace
-     * @return \Objex\Models\ObjectSchema
+     * @param string $namespace
+     * @return mixed
+     * @throws Exception
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
-    function getSchema($namespace) {
+    function getSchema(string $namespace) {
         $schema = objex()->get('orm')
             ->getRepository('Objex\Models\ObjectSchema')
             ->findOneBy(['name' => $namespace]);
@@ -26,7 +30,16 @@ if (! function_exists('getSchema')) {
 }
 
 if (! function_exists('setSchema')) {
-    function setSchema($namespace, array $schema) {
+    /**
+     * @param string $namespace
+     * @param array $schema
+     * @return mixed
+     * @throws Exception
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     */
+    function setSchema(string $namespace, array $schema) {
         return  $schema = objex()->get('orm')
             ->getRepository('Objex\Models\ObjectSchema')
             ->save($namespace, $schema);
@@ -34,7 +47,15 @@ if (! function_exists('setSchema')) {
 }
 
 if (! function_exists('deleteSchema')) {
-    function deleteSchema($namespace) {
+    /**
+     * @param string $namespace
+     * @return mixed
+     * @throws Exception
+     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
+     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
+     */
+    function deleteSchema(string $namespace) {
         return  $schema = objex()->get('orm')
             ->getRepository('Objex\Models\ObjectSchema')
             ->delete($namespace);
