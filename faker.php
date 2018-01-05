@@ -11,7 +11,7 @@ $sc = include "src/bootstrap/services.php";
 $newProductName = $argv[1];
 
 $product = new \Objex\Models\BaseObject();
-$product->setName($newProductName);
+$product->setToken($newProductName);
 $product->setData([
     'foo' => 'bar'
 ]);

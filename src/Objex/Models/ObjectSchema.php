@@ -11,28 +11,20 @@ namespace Objex\Models;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * @ORM\Entity(repositoryClass="Objex\API\Object\ObjectRepository")
- * @ORM\Table(name="objects")
+ * @ORM\Table(name="object_schemas")
  **/
-class BaseObject
+class ObjectSchema
 {
     /** @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue **/
     protected $id;
 
-    /** @ORM\Column(type="string") **/
-    protected $token;
+    /** @ORM\Column(type="string", unique=true) **/
+    protected $name;
 
     /** @ORM\Column(type="json") **/
     protected $data;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Objex\Models\ObjectSchema")
-     * @ORM\JoinColumn(name="schema_id", referencedColumnName="id", nullable=false)
-     *
-     */
-    protected $schema;
 
     /**
      * @return mixed
@@ -45,17 +37,17 @@ class BaseObject
     /**
      * @return mixed
      */
-    public function getToken()
+    public function getName()
     {
-        return $this->token;
+        return $this->name;
     }
 
     /**
      * @param $token
      */
-    public function setToken($token): void
+    public function setName($name): void
     {
-        $this->token = $token;
+        $this->name = $name;
     }
 
     /**

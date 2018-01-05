@@ -9,9 +9,9 @@ require_once 'vendor/autoload.php';
 $sc = include "src/bootstrap/services.php";
 
 $productRepository = $sc->get('orm')->getRepository('Objex\Models\BaseObject');
-$products = $productRepository->getAll(2);
+$products = $productRepository->findAll();
 
 foreach ($products as $product) {
-    echo sprintf("-%s\n", $product->getName());
+    echo sprintf("-%s\n", $product->getToken());
     dump( $product->getData());
 }

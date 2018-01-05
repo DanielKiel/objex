@@ -10,9 +10,11 @@ namespace Objex\API\Object;
 
 
 use Doctrine\ORM\EntityRepository;
+use Objex\Core\API\Repositories\Pagination;
 
 class ObjectRepository extends EntityRepository implements ObjectContract
 {
+    use Pagination;
 
     public function getAll($limit)
     {
