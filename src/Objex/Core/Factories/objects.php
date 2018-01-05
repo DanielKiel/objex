@@ -1,19 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dk
- * Date: 05.01.18
- * Time: 14:31
- */
-if (! function_exists('objex')) {
-    /**
-     * @return \Symfony\Component\DependencyInjection\ContainerBuilder
-     */
-    function objex()  {
-        return include __DIR__.'/../../../bootstrap/services.php';
-    }
-}
-
 if (! function_exists('saveObject')) {
     /**
      * @param string $namespace

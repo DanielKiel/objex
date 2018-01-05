@@ -18,6 +18,7 @@
         "files": [
             "src/config/database.php",
             "src/config/modules.php",
+            "src/bootstrap/services.php",
             "src/Objex/Core/Factories/objects.php",
             "src/Objex/Core/Factories/schemas.php"
         ]

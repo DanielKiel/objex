@@ -39,10 +39,19 @@ class Validator implements EventSubscriber
     }
 
     /**
-     * will validate before creating
+     * will validate before updating
      * @param LifecycleEventArgs $args
      */
     public function preUpdate(LifecycleEventArgs $args)
+    {
+
+    }
+
+    /**
+     * will validate before deleting
+     * @param LifecycleEventArgs $args
+     */
+    public function preRemove(LifecycleEventArgs $args)
     {
 
     }
