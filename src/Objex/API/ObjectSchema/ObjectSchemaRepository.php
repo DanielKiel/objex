@@ -10,8 +10,65 @@ namespace Objex\API\ObjectSchema;
 
 
 use Doctrine\ORM\EntityRepository;
+use Objex\Core\API\Repositories\Pagination;
+use Objex\Models\ObjectSchema;
 
-class ObjectSchemaRepository extends EntityRepository
+class ObjectSchemaRepository extends EntityRepository implements ObjectSchemaContract
 {
+    use Pagination;
 
+    /**
+     * @param string $namespace
+     * @param array $data
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function save(string $namespace, array $data = [])
+    {
+        $schema = $this->findOneBy(['name' => $namespace]);
+
+        if (! $schema instanceof ObjectSchema) {
+            $schema = new ObjectSchema();
+        }
+
+        $schema->setName($namespace);
+        $schema->setData($data);
+
+        $this->getEntityManager()->persist($schema);
+
+        try {
+            $this->getEntityManager()->flush();
+        }
+        catch (\Exception $e) {
+            //2TODO think about it
+            dump($e);
+        }
+
+    }
+
+    /**
+     * @param $namespace
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function delete($namespace)
+    {
+        $schema = $this->findOneBy(['name' => $namespace]);
+
+        if (! $schema instanceof ObjectSchema) {
+            //@TODO what to do here
+        }
+
+        $this->getEntityManager()->remove($schema);
+
+        try {
+            $this->getEntityManager()->flush();
+        }
+        catch (\Exception $e) {
+            //2TODO think about it
+            dump($e);
+        }
+    }
 }

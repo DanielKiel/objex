@@ -10,11 +10,15 @@ $sc = include "src/bootstrap/services.php";
 
 $newProductName = $argv[1];
 
+
+$schema =$sc->get('orm')->getRepository('Objex\Models\ObjectSchema')->find(1);
+
 $product = new \Objex\Models\BaseObject();
 $product->setToken($newProductName);
 $product->setData([
     'foo' => 'bar'
 ]);
+$product->setSchema($schema);
 
 $sc->get('orm')->persist($product);
 $sc->get('orm')->flush();

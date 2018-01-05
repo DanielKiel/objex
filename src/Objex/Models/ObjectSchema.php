@@ -12,8 +12,9 @@ namespace Objex\Models;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Objex\API\Object\ObjectRepository")
+ * @ORM\Entity(repositoryClass="Objex\API\ObjectSchema\ObjectSchemaRepository")
  * @ORM\Table(name="object_schemas")
+ * @ORM\HasLifecycleCallbacks
  **/
 class ObjectSchema
 {
@@ -71,5 +72,20 @@ class ObjectSchema
     }
 
 
+    /**
+     * @ORM\PreRemove
+     */
+    public function removeObjects()
+    {
+        $objects = objex()->get('orm')
+            ->getRepository('Objex\Models\BaseObject')
+            ->findBy(['schema' => $this]);
 
+        $em = objex()->get('orm');
+        foreach ($objects as $object) {
+            $entity = $em->merge($object);
+            $em->remove($entity);
+        }
+        $em->flush();
+    }
 }

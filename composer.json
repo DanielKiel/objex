@@ -13,7 +13,9 @@
     "autoload": {
         "psr-4": { "": "src/" },
         "files": [
-            "src/config/database.php"
+            "src/config/database.php",
+            "src/Objex/Core/Factories/objects.php",
+            "src/Objex/Core/Factories/schemas.php"
         ]
     },
     "require-dev": {

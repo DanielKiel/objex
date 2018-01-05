@@ -8,6 +8,7 @@
 
 namespace Simplex\Tests;
 
+use Objex\Models\ObjectSchema;
 use PHPUnit\Framework\TestCase;
 
 class AppTest extends TestCase

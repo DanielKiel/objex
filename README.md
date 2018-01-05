@@ -5,6 +5,28 @@ this is only some firts coding stuff - do not use it in production, it can have 
 ## idea behind
 this should be get a microframework to handle an api server  
 
+objex() will be your friend :) with this you will get access to the core, the dependency injection definitions like
+
+- objex()->get('app') // the instance of App.php
+- objex()->get('orm') //doctrine orm
+
+Objex will have a lot of helper functions integrated - the aim is to define objects fast, without 
+thinking about the objects and services behind
+
+```php
+
+//create and update an object schema
+setSchema('MyNamespace', [
+    'foo' => 'bar'
+]);
+
+//get an object schema
+getSchema('MyNamespace');
+
+//delete an object schema
+deleteSchema('MyNamespace');
+
+```
 
 ## first hints about what to do
 

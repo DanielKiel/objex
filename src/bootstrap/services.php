@@ -17,9 +17,12 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\ORM\Configuration;
+use Doctrine\ORM\Proxy\ProxyFactory;
 use Objex\App;
 
 $routes = include __DIR__.'/../routes.php';
+$applicationMode = 'development';
 
 $sc = new DependencyInjection\ContainerBuilder();
 $sc->register('context', Routing\RequestContext::class);
@@ -47,19 +50,27 @@ $sc->register('dispatcher', EventDispatcher\EventDispatcher::class)
 
 
 //------- some doctrine experiments
-$paths            = CONFIG_DATABASE_ENTITY_PATHS;
-$isDevMode        = false;
-$connectionParams = CONFIG_DATABASE_CONNECTION;
+if ($applicationMode == "development") {
+    $cache = new \Doctrine\Common\Cache\ArrayCache;
+} else {
+    $cache = new \Doctrine\Common\Cache\ApcCache;
+}
 
-$config = Setup::createConfiguration($isDevMode);
-$driver = new AnnotationDriver(new AnnotationReader(), $paths);
+$config = new Configuration;
+$config->setMetadataCacheImpl($cache);
+$driverImpl = $config->newDefaultAnnotationDriver(CONFIG_DATABASE_ENTITY_PATHS, false);
+$config->setMetadataDriverImpl($driverImpl);
+$config->setQueryCacheImpl($cache);
+$config->setProxyDir(__DIR__.'/../Proxies');
+$config->setProxyNamespace('Objex\Proxies');
+$config->setAutoGenerateProxyClasses($applicationMode === 'development');
 
-// registering noop annotation autoloader - allow all annotations by default
-AnnotationRegistry::registerLoader('class_exists');
-$config->setMetadataDriverImpl($driver);
+if ('development' === $applicationMode) {
+    $config->setAutoGenerateProxyClasses(ProxyFactory::AUTOGENERATE_EVAL);
+}
 
-//$entityManager = EntityManager::create($connectionParams, $config);
-$sc->set('orm', EntityManager::create($connectionParams, $config));
+$sc->set('orm', EntityManager::create( CONFIG_DATABASE_CONNECTION, $config));
+//-------------------
 
 $sc->register('app', App::class)
     ->setArguments(array(

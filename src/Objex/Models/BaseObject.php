@@ -78,6 +78,22 @@ class BaseObject
         $this->data = $data;
     }
 
+    /**
+     * @return ObjectSchema
+     */
+    public function getSchema(): ObjectSchema
+    {
+        return $this->schema;
+    }
+
+    /**
+     * @param ObjectSchema $schema
+     */
+    public function setSchema(ObjectSchema $schema)
+    {
+        $this->schema = $schema;
+    }
+
 
 
 }
