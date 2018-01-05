@@ -13,21 +13,50 @@ objex() will be your friend :) with this you will get access to the core, the de
 Objex will have a lot of helper functions integrated - the aim is to define objects fast, without 
 thinking about the objects and services behind
 
-```php
+### schema handling
 
+```php
 //create and update an object schema
 setSchema('MyNamespace', [
     'foo' => 'bar'
 ]);
-
-//get an object schema
-getSchema('MyNamespace');
-
-//delete an object schema
-deleteSchema('MyNamespace');
-
 ```
 
+```php
+//get an object schema
+getSchema('MyNamespace');
+```
+
+Be careful what you do: deleting a schema means deleting all objects which belongs to this schema!!!
+
+```php
+//delete an object schema
+deleteSchema('MyNamespace');
+```
+
+
+### object handling
+
+make an upsert with save:
+
+```php
+$obj = saveObject('MyNamespace', [
+    'foo' => 'bar'
+]);
+```
+
+After this you have access to the properties with:
+
+```php
+$obj->id;
+$obj->foo;
+```
+
+deleting an object:
+
+```php
+deleteObj('MyNamespace', 5);
+```
 ## first hints about what to do
 
 configure the database: 

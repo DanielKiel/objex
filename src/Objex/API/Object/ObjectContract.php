@@ -11,5 +11,22 @@ namespace Objex\API\Object;
 
 interface ObjectContract
 {
+    /**
+     * @param string $namespace
+     * @param array $data
+     * @return object
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function save(string $namespace, array $data = []);
 
+    /**
+     * @param string $namespace
+     * @param int $objectId
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function delete(string $namespace, int $objectId);
 }

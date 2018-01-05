@@ -27,6 +27,14 @@ class ObjectRepository extends EntityRepository implements ObjectContract
 //        return $query->getResult();
 //    }
 
+    /**
+     * @param string $namespace
+     * @param array $data
+     * @return object
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function save(string $namespace, array $data = [])
     {
         $schema = getSchema($namespace);
@@ -62,6 +70,13 @@ class ObjectRepository extends EntityRepository implements ObjectContract
         ], $object->getData());
     }
 
+    /**
+     * @param string $namespace
+     * @param int $objectId
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function delete(string $namespace, int $objectId)
     {
         $object = $this->find($objectId);
