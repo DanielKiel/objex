@@ -70,3 +70,30 @@ php vendor/bin/doctrine orm:schema-tool:update --dump-sql
 php vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
 
 this will not do any migration yet - it is some natural doctrine handling here, not less or more
+
+
+## Modules
+
+### Validation
+
+When defining a schema, you can do for example:
+
+```php
+    setSchema('MyNamespace',[
+        'definition' => [
+            'foo' => [
+                'type' => 'text',
+                'validation' => 'strlen(foo) > 3'
+            ],
+            'bar' => [
+                'type' => 'text',
+                'validation' => 'strlen(bar) < 3',
+                'errormessage' => 'bar must not have more than 2 signs'
+            ]
+        ]
+    ]);
+```
+
+it is using symfony expression language, documented here: https://symfony.com/doc/master/components/expression_language/syntax.html
+
+@dev: we can register here php functions and more at LanguageDefinition, at the moment at Objex\Validation\Rules, this should get extendable later

@@ -71,6 +71,56 @@ class ObjectSchema
         $this->data = $data;
     }
 
+    /**
+     * @return array
+     */
+    public function getDefinition():array
+    {
+        $data = $this->getData();
+
+        if (! array_key_exists('definition', $data)) {
+            return [];
+        }
+
+        if (! is_array($data['definition'])) {
+            return [];
+        }
+
+        return $data['definition'];
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfiguration():array
+    {
+        $data = $this->getData();
+
+        if (! array_key_exists('configuration', $data)) {
+            return SCHEMA_DEFAULT_CONFIGURATION;
+        }
+
+        if (! is_array($data['configuration'])) {
+            return SCHEMA_DEFAULT_CONFIGURATION;
+        }
+
+        return $data['configuration'];
+    }
+
+    public function getValidationType(): string
+    {
+        $config = $this->getConfiguration();
+
+        if (! array_key_exists('validationType', $config)) {
+            return 'only';
+        }
+
+        if (! is_string($config['validationType'])) {
+            return 'only';
+        }
+
+        return $config['validationType'];
+    }
 
     /**
      * @ORM\PreRemove

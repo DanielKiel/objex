@@ -56,4 +56,39 @@ class ObjectSchemapTest extends TestCase
         $this->expectException(\Exception::class);
         getSchema('MyNamespace');
     }
+
+    public function testSchemaMethods()
+    {
+        $definition = [
+            'foo' => [
+                'type' => 'text',
+                'validation' => 'required'
+            ]
+        ];
+
+        $configuration = [
+            'validationType' => 'min', //default is only;  'only' is: no more attributes, 'min' is there are more allowed - these will do not have validation
+        ];
+
+        setSchema('MyNamespace', [
+            'definition' => $definition
+        ]);
+
+        $schema = getSchema('MyNamespace');
+        $this->assertTrue(is_array($schema->getConfiguration()));
+        $this->assertEquals('only', $schema->getValidationType());
+
+        setSchema('MyNamespace', [
+            'definition' => $definition,
+            'configuration' => $configuration
+        ]);
+
+        $schema = getSchema('MyNamespace');
+
+        $this->assertEquals($definition, $schema->getDefinition());
+        $this->assertEquals($configuration, $schema->getConfiguration());
+        $this->assertEquals('min', $schema->getValidationType());
+
+        deleteSchema('MyNamespace');
+    }
 }

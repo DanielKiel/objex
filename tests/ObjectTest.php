@@ -25,7 +25,12 @@ class ObjectTest extends TestCase
     public function testObjectCRUD()
     {
         setSchema('MyNamespace', [
-            'foo' => 'bar'
+            'definition' => [
+                'foo' => [
+                    'type' => 'text',
+                    'validation' => ''
+                ]
+            ]
         ]);
 
         $schema = getSchema('MyNamespace');

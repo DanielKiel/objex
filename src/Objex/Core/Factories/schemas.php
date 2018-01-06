@@ -9,7 +9,7 @@
 if (! function_exists('getSchema')) {
     /**
      * @param string $namespace
-     * @return mixed
+     * @return \Objex\Models\ObjectSchema
      * @throws Exception
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
