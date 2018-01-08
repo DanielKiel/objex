@@ -9,14 +9,14 @@
 if (! function_exists('getSchema')) {
     /**
      * @param string $namespace
-     * @return \Objex\Models\ObjectSchema
+     * @return \Objex\DBStorage\Models\ObjectSchema
      * @throws Exception
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     function getSchema(string $namespace) {
-        $schema = objex()->get('orm')
+        $schema = objex()->get('DBStorage')
             ->getRepository('Objex\DBStorage\Models\ObjectSchema')
             ->findOneBy(['name' => $namespace]);
 
@@ -40,7 +40,7 @@ if (! function_exists('setSchema')) {
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     function setSchema(string $namespace, array $schema) {
-        return  $schema = objex()->get('orm')
+        return  $schema = objex()->get('DBStorage')
             ->getRepository('Objex\DBStorage\Models\ObjectSchema')
             ->save($namespace, $schema);
     }
@@ -56,7 +56,7 @@ if (! function_exists('deleteSchema')) {
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     function deleteSchema(string $namespace) {
-        return  $schema = objex()->get('orm')
+        return  $schema = objex()->get('DBStorage')
             ->getRepository('Objex\DBStorage\Models\ObjectSchema')
             ->delete($namespace);
     }

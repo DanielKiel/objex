@@ -49,7 +49,6 @@ final class Objex {
         }
 
         $routes = include __DIR__.'/../routes.php';
-        $applicationMode = 'development';
 
         $this->sc = new DependencyInjection\ContainerBuilder();
 

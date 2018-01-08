@@ -10,7 +10,6 @@ namespace Objex\DBStorage\Repositories;
 
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Objex\DBStorage\Repositories\Traits\Pagination;
 use Objex\DBStorage\Models\BaseObject;
 use Objex\DBStorage\Contracts\ObjectContract;
@@ -21,7 +20,7 @@ class ObjectRepository extends EntityRepository implements ObjectContract
 
     public function getAll($limit)
     {
-        $query = 'Select o.data as obj From Objex\\Models\\BaseObject o  ORDER BY o.id DESC';
+        $query = 'Select o.data as obj From Objex\\DBStorage\\Models\\BaseObject o  ORDER BY o.id DESC';
 
         $query = $this->getEntityManager()->createQuery($query);
         $query->setMaxResults($limit);
@@ -40,13 +39,13 @@ class ObjectRepository extends EntityRepository implements ObjectContract
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
-    public function save(string $namespace, array $data = [])
+    public function save(string $namespace, array $data = []): \stdClass
     {
         $schema = getSchema($namespace);
 
         $object = null;
         if (array_key_exists('id', $data)) {
-            $object = objex()->get('orm')
+            $object = objex()->get('DBStorage')
                 ->getRepository('Objex\DBStorage\Models\BaseObject')
                 ->find($data['id']);
 

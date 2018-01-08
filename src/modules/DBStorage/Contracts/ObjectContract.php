@@ -19,7 +19,7 @@ interface ObjectContract
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(string $namespace, array $data = []);
+    public function save(string $namespace, array $data = []): \stdClass;
 
     /**
      * @param string $namespace

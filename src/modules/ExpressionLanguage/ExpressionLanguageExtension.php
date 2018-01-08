@@ -25,7 +25,7 @@ class ExpressionLanguageExtension extends Extension
     public function boot(Booting $event)
     {
         $event->getServiceContainer()
-            ->set('objex.language', new ExpressionLanguage(null, [
+            ->set('ExpressionLanguage', new ExpressionLanguage(null, [
                 new StringExpressionLanguageProvider()
             ]));
     }

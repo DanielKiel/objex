@@ -26,7 +26,7 @@ class ObjectSchemapTest extends TestCase
         $this->assertInstanceOf(
             ObjectSchema::class,
             objex()
-            ->get('orm')
+            ->get('DBStorage')
             ->getRepository('Objex\DBStorage\Models\ObjectSchema')
             ->findOneBy(['name' => 'MyNamespace'])
         );
@@ -49,7 +49,7 @@ class ObjectSchemapTest extends TestCase
         deleteSchema('MyNamespace');
 
         $this->assertEmpty(objex()
-            ->get('orm')
+            ->get('DBStorage')
             ->getRepository('Objex\DBStorage\Models\ObjectSchema')
             ->findOneBy(['name' => 'MyNamespace']));
 

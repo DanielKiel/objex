@@ -45,21 +45,20 @@ class ValidatorExtension extends Extension
     public function boot(Booting $event)
     {
         $this->hasServices([
-            'objex.language'
+            'ExpressionLanguage'
         ]);
 
-        $event->getServiceContainer()->get('orm')
+        $event->getServiceContainer()->get('DBStorage')
             ->getEventManager()
             ->addEventSubscriber(new Validator());
+
     }
 
-    /**
-     * @return array
-     */
-    public static function subscribe(): array
+    public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::EXCEPTION => array('onKernelException', 0),
+            'booting' => 'boot',
+             KernelEvents::EXCEPTION => array('onKernelException', 0),
         ];
     }
 }

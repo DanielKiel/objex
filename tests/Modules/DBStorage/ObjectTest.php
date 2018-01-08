@@ -38,13 +38,13 @@ class ObjectTest extends TestCase
             'foo' => 'bar'
         ]);
 
-        $obj = objex()->get('orm')->getRepository('Objex\DBStorage\Models\BaseObject')->findBy(['schema' => $schema]);
+        $obj = objex()->get('DBStorage')->getRepository('Objex\DBStorage\Models\BaseObject')->findBy(['schema' => $schema]);
 
         $saved = saveObject('MyNamespace', [
             'foo' => 'bar'
         ]);
 
-        $obj = objex()->get('orm')->getRepository('Objex\DBStorage\Models\BaseObject')->findBy(['schema' => $schema]);
+        $obj = objex()->get('DBStorage')->getRepository('Objex\DBStorage\Models\BaseObject')->findBy(['schema' => $schema]);
 
         $this->assertEquals(2, count($obj));
 
@@ -54,19 +54,19 @@ class ObjectTest extends TestCase
         $this->assertEquals('foo', $updObj->new);
         $this->assertEquals($saved->id, $updObj->id);
 
-        $obj = objex()->get('orm')->getRepository('Objex\DBStorage\Models\BaseObject')->findBy(['schema' => $schema]);
+        $obj = objex()->get('DBStorage')->getRepository('Objex\DBStorage\Models\BaseObject')->findBy(['schema' => $schema]);
 
         $this->assertEquals(2, count($obj));
 
         deleteObject('MyNamespace', $saved->id);
 
-        $obj = objex()->get('orm')->getRepository('Objex\DBStorage\Models\BaseObject')->findBy(['schema' => $schema]);
+        $obj = objex()->get('DBStorage')->getRepository('Objex\DBStorage\Models\BaseObject')->findBy(['schema' => $schema]);
 
         $this->assertEquals(1, count($obj));
 
         deleteSchema('MyNamespace');
 
-        $obj = objex()->get('orm')->getRepository('Objex\DBStorage\Models\BaseObject')->findBy(['schema' => $schema]);
+        $obj = objex()->get('DBStorage')->getRepository('Objex\DBStorage\Models\BaseObject')->findBy(['schema' => $schema]);
 
         $this->assertEquals(0, count($obj));
     }

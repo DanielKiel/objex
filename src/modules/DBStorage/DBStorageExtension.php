@@ -20,7 +20,8 @@ class DBStorageExtension extends Extension
 {
     public function boot(Booting $event)
     {
-        $debug = objex()->get('config')->getConfig('env')['debug'];
+        $sc = $event->getServiceContainer();
+        $debug = $sc->get('config')->getConfig('env')['debug'];
 
         if ($debug === true) {
             $cache = new \Doctrine\Common\Cache\ArrayCache;
@@ -30,7 +31,7 @@ class DBStorageExtension extends Extension
 
         $config = new Configuration;
         $config->setMetadataCacheImpl($cache);
-        $driverImpl = $config->newDefaultAnnotationDriver(objex()->get('config')->getConfig('database')['entity_paths'], false);
+        $driverImpl = $config->newDefaultAnnotationDriver($sc->get('config')->getConfig('database')['entity_paths'], false);
         $config->setMetadataDriverImpl($driverImpl);
         $config->setQueryCacheImpl($cache);
         $config->setProxyDir(__DIR__.'/../Proxies');
@@ -41,8 +42,8 @@ class DBStorageExtension extends Extension
             $config->setAutoGenerateProxyClasses(ProxyFactory::AUTOGENERATE_EVAL);
         }
 
-        objex()->set('orm', EntityManager::create(
-            objex()->get('config')->getConfig('database')['connection'],
+        $sc->set('DBStorage', EntityManager::create(
+            $sc->get('config')->getConfig('database')['connection'],
             $config,
             new EventManager()
         ));

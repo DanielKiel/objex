@@ -128,11 +128,11 @@ class ObjectSchema
      */
     public function removeObjects()
     {
-        $objects = objex()->get('orm')
+        $objects = objex()->get('DBStorage')
             ->getRepository('Objex\DBStorage\Models\BaseObject')
             ->findBy(['schema' => $this]);
 
-        $em = objex()->get('orm');
+        $em = objex()->get('DBStorage');
         foreach ($objects as $object) {
             $entity = $em->merge($object);
             $em->remove($entity);

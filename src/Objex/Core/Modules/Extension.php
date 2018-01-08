@@ -23,23 +23,13 @@ abstract class Extension implements EventSubscriberInterface
     }
 
     /**
-     * subscribe to additional events
-     * @return array
-     */
-    public static function subscribe():array
-    {
-        return [];
-    }
-
-    /**
      * @return array
      */
     public static function getSubscribedEvents()
     {
-        $default = [
+        return [
             'booting' => 'boot'
         ];
-        return array_merge($default, self::subscribe());
     }
 
     /**

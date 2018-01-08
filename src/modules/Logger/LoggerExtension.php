@@ -23,10 +23,10 @@ class LoggerExtension extends Extension
      */
     public function boot(Booting $event)
     {
-        $streamHandler = new StreamHandler(__DIR__ . '/../../storage/logs/objex.log');
+        $streamHandler = new StreamHandler($event->getServiceContainer()->get('config')->getConfig('logs')['path']);
         $streamHandler->setFormatter(new LineFormatter());
-        objex()->set(
-            'logger',
+        $event->getServiceContainer()->set(
+            'Logger',
             new Logger('objex', $streamHandler)
         );
     }
@@ -37,14 +37,15 @@ class LoggerExtension extends Extension
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        objex()->get('logger')
+        objex()->get('Logger')
             ->logException($event->getException());
     }
 
-    public static function subscribe(): array
+    public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::EXCEPTION => array('onKernelException', 9999),
+            'booting' => 'boot',
+            KernelEvents::EXCEPTION => array('onKernelException', 0),
         ];
     }
 }

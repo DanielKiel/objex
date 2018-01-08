@@ -11,7 +11,7 @@ if (! function_exists('saveObject')) {
      */
     function saveObject(string $namespace, array $data = []) {
         return objex()
-            ->get('orm')
+            ->get('DBStorage')
             ->getRepository('Objex\DBStorage\Models\BaseObject')
             ->save($namespace, $data);
     }
@@ -29,7 +29,7 @@ if (! function_exists('deleteObject')) {
      */
     function deleteObject(string $namespace, int $id) {
         return objex()
-            ->get('orm')
+            ->get('DBStorage')
             ->getRepository('Objex\DBStorage\Models\BaseObject')
             ->delete($namespace, $id);
     }
@@ -47,7 +47,7 @@ if (! function_exists('bulkObjects')) {
      */
     function bulkObjects(string $namespace, array $data = []) {
         return objex()
-            ->get('orm')
+            ->get('DBStorage')
             ->getRepository('Objex\DBStorage\Models\BaseObject')
             ->bulkObjects($namespace, $data);
     }

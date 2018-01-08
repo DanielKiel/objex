@@ -7,5 +7,5 @@
  */
 
 return [
-    'path' => 'my/path'
+    'path' => base_path('storage/logs/') . 'objex.log'
 ];

@@ -23,8 +23,8 @@ class APIController
     public function indexAction($name)
     {
         $results = objex()
-            ->get('orm')
-            ->getRepository('Objex\Models\BaseObject')
+            ->get('DBStorage')
+            ->getRepository('Objex\DBStorage\Models\BaseObject')
             ->getAll(Query::HYDRATE_ARRAY);
 
         return new JsonResponse([
