@@ -55,8 +55,8 @@ class APIController
                 ],
                 'bar' => [
                     'type' => 'text',
-                    'validation' => 'strlen(bar) < 3',
-                    'errormessage' => 'bar must not have more than 2 signs'
+                    'validation' => 'strlen(bar) < 3 and strlen(bar) > 0',
+                    'errormessage' => 'bar must not have more than 2 signs but is required'
                 ]
             ]
         ]);

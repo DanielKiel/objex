@@ -20,7 +20,9 @@ class ErrorController
      */
     public function errorAction(ValidationException $exception)
     {
-        return new JsonResponse($exception->getErrors(), 422);
+        return new JsonResponse([
+            'errors' => $exception->getErrors()
+        ], 422);
     }
 
 }

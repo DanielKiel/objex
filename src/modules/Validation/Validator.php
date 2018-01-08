@@ -17,6 +17,8 @@ use Objex\Validation\Exceptions\ValidationException;
 use Objex\Validation\Rules\StringExpressionLanguageProvider;
 use Objex\Validation\Util\RemoveUnAllowedAttributes;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Validation;
 
 class Validator implements EventSubscriber
 {
@@ -134,6 +136,25 @@ class Validator implements EventSubscriber
                     }
 
                 }
+            }
+
+            if (is_object($validation) || is_array($validation)) {
+
+                if (is_object($validation) && ! $validation instanceof Constraint) {
+                    throw new \Exception('Validation missconfigured, definition of ' . get_class($validation) . ' is not supported');
+                }
+
+                $validator = Validation::createValidator();
+                $results = $validator->validate($attributes[$attribute], $validation);
+
+                if ($results->count() > 0) {
+                    $errors[$attribute] = '';
+                    foreach ($results as $error) {
+                        $errors[$attribute] .= $error->getMessage();
+                    }
+                }
+
+
             }
         }
 

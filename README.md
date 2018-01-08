@@ -127,3 +127,46 @@ When defining a schema, you can do for example:
 it is using symfony expression language, documented here: https://symfony.com/doc/master/components/expression_language/syntax.html
 
 @dev: we can register here php functions and more at LanguageDefinition, at the moment at Objex\Validation\Rules, this should get extendable later
+
+Also it is possible to define some "basic" symfony constraints, like here: https://symfony.com/doc/master/validation.html
+
+```php
+setSchema('MyNamespace',[
+    'definition' => [
+        'foo' => [
+            'type' => 'text',
+            'validation' => [
+                new \Symfony\Component\Validator\Constraints\Length(['min' => 5]),
+                new \Symfony\Component\Validator\Constraints\Email()
+            ]
+        ],
+        'bar' => [
+            'type' => 'text',
+            'validation' => new \Symfony\Component\Validator\Constraints\Length(['max' => 2]),
+            'errormessage' => 'bar must not have more than 2 signs'
+        ]
+    ]
+]);
+```
+
+## next steps:
+make a more modular architecture !!! expression language now is dependent to validation - must get a service, but therefor we must have
+something like a service checker - so a module must define whcih services it needs to can run and a function must exists which will loop through modules
+to detect modules which can not run cause services are not available
+
+## wanted syntax to define an api server only with json
+
+```json
+{
+  "MyNamspace" : {
+    "alias": "myAlias",
+    "definition" : {
+      "foo" : {
+        "type": "text",
+        "validation": "strlen(foo) > 5 and strpos(foo, 'needed') !== false"   //basic expressions of php included for validation definition
+      }
+    },
+    "onAfterCreate": "HTTP.post('https://externalAPI.com', myAlias)" //define events here onAfterCreate, onAfterUpdate, onAfterDelete, onBeforeCreate, onBeforeUpdate, onBeforeDelete, ... 
+  }
+}
+```
