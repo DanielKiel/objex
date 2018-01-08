@@ -10,12 +10,15 @@
         "doctrine/orm": "^2.6",
         "symfony/var-dumper": "^4.0",
         "symfony/validator": "^4.0",
-        "symfony/expression-language": "^4.0"
+        "symfony/expression-language": "^4.0",
+        "monolog/monolog": "^1.23"
     },
     "autoload": {
         "psr-4": {
             "": "src/",
-            "Objex\\Validation\\": "src/modules/Validation"
+            "Objex\\Validation\\": "src/modules/Validation",
+            "Objex\\ExpressionLanguage\\": "src/modules/ExpressionLanguage",
+            "Objex\\Logger\\": "src/modules/Logger"
         },
         "files": [
             "src/config/database.php",
@@ -27,5 +30,6 @@
         ]
     },
     "require-dev": {
+        "phpmetrics/phpmetrics": "^2.3"
     }
 }

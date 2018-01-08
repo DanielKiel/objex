@@ -6,7 +6,7 @@
  * Time: 11:59
  */
 
-namespace Objex\Validation\Rules;
+namespace Objex\ExpressionLanguage\Specifications;
 
 
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;

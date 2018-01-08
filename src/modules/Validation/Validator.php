@@ -107,9 +107,7 @@ class Validator implements EventSubscriber
      */
     public function validate(array $attributes, array $definition = []): array
     {
-        $language = new ExpressionLanguage(null, [
-            new StringExpressionLanguageProvider()
-        ]);
+        $language = objex()->get('objex.language');
 
         $errors = [];
 

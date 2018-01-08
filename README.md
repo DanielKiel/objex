@@ -149,6 +149,14 @@ setSchema('MyNamespace',[
 ]);
 ```
 
+## actual code quality
+
+phpmetrics is integrated at dev so for example type:
+
+```
+phpmetrics --report-html=.codereport ./src
+```
+
 ## next steps:
 make a more modular architecture !!! expression language now is dependent to validation - must get a service, but therefor we must have
 something like a service checker - so a module must define whcih services it needs to can run and a function must exists which will loop through modules

@@ -44,6 +44,10 @@ class ValidatorService implements EventSubscriberInterface
      */
     public function onBooting(Booting $event)
     {
+        $this->hasServices([
+            'objex.language'
+        ]);
+
         $event->getServiceContainer()->get('orm')
             ->getEventManager()
             ->addEventSubscriber(new Validator());
@@ -55,5 +59,14 @@ class ValidatorService implements EventSubscriberInterface
             'booting' => 'onBooting',
             KernelEvents::EXCEPTION => array('onKernelException', 0),
         ];
+    }
+
+    public function hasServices(array $services = [])
+    {
+        foreach ($services as $service) {
+            if (! objex()->has($service)) {
+                throw new \Exception('service not defined: ' . $service);
+            }
+        }
     }
 }

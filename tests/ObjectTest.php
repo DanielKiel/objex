@@ -27,8 +27,7 @@ class ObjectTest extends TestCase
         setSchema('MyNamespace', [
             'definition' => [
                 'foo' => [
-                    'type' => 'text',
-                    'validation' => ''
+                    'type' => 'text'
                 ]
             ]
         ]);

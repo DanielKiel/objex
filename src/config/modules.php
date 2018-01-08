@@ -7,5 +7,7 @@
  */
 
 const MODULES = [
+    \Objex\ExpressionLanguage\ExpressionLanguageService::class,
+    \Objex\Logger\LoggerService::class,
     \Objex\Validation\ValidatorService::class
 ];
