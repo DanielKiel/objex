@@ -74,6 +74,36 @@ this will not do any migration yet - it is some natural doctrine handling here, 
 
 ## Modules
 
+modules are registered at config/modules.php. An example to register on booting by defined class:
+```php
+
+namespace Objex\Validation;
+
+
+use Objex\Core\Events\Booting;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class ValidatorService implements EventSubscriberInterface
+{
+    public function onBooting(Booting $event)
+    {
+        $event->getServiceContainer()->get('orm')
+            ->getEventManager()
+            ->addEventSubscriber(new Validator());
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            'booting' => 'onBooting'
+        ];
+    }
+}
+
+```
+
+There are a lot of default symfony events where you can listen to.
+
 ### Validation
 
 When defining a schema, you can do for example:

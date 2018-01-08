@@ -13,6 +13,7 @@ use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Objex\Models\ObjectSchema;
+use Objex\Validation\Exceptions\ValidationException;
 use Objex\Validation\Rules\StringExpressionLanguageProvider;
 use Objex\Validation\Util\RemoveUnAllowedAttributes;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -50,13 +51,16 @@ class Validator implements EventSubscriber
         $validationType = $schema->getValidationType();
 
         if ($validationType === 'only') {
-            $this->validateOnlyType($entity->getData(), $definition);
+            $this->performValidationResult(
+                RemoveUnAllowedAttributes::remove($entity->getData(), $definition),
+                $definition
+            );
 
             return;
         }
 
         if ($validationType === 'min') {
-            $this->validateMinType($entity->getData(), $definition);
+            $this->performValidationResult($entity->getData(), $definition);
 
             return;
         }
@@ -81,15 +85,17 @@ class Validator implements EventSubscriber
 
     }
 
-    public function validateOnlyType(array $attributes, array $definition = [])
+    /**
+     * @param array $attributes
+     * @param array $definition
+     */
+    public function performValidationResult(array $attributes, array $definition = []): void
     {
-        //cause only is set, we remove all attributes which are not specified
-        $attributes = RemoveUnAllowedAttributes::remove($attributes, $definition);
-    }
+        $result = $this->validate($attributes, $definition);
 
-    public function validateMinType(array $attributes, array $definition = [])
-    {
-
+        if (! empty($result)) {
+            throw (new ValidationException($result));
+        }
     }
 
     /**

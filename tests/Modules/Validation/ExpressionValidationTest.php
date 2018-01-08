@@ -14,7 +14,7 @@ class ExpressionValidationTest extends \PHPUnit\Framework\TestCase
         $definition = [
             'foo' => [
                 'type' => 'text',
-                'validation' => 'strlen(foo) > 3'
+                'validation' => 'strpos(foo, "needed") !== false and strlen(foo) > 3'
             ],
             'bar' => [
                 'type' => 'text',
@@ -24,7 +24,7 @@ class ExpressionValidationTest extends \PHPUnit\Framework\TestCase
         ];
 
         $attributes = [
-            'foo' => 'va',
+            'foo' => 'needed value',
             'bar' => 'value'
         ];
 
@@ -32,6 +32,10 @@ class ExpressionValidationTest extends \PHPUnit\Framework\TestCase
 
         $result = $validator->validate($attributes, $definition);
 
-        dump($result);
+        $this->assertEquals(['bar'=>'bar must not have more than 2 signs'],$result);
+
+        $this->expectException(\Objex\Validation\Exceptions\ValidationException::class);
+
+        $validator->performValidationResult($attributes, $definition);
     }
 }

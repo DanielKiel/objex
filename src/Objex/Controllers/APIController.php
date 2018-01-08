@@ -9,6 +9,7 @@ namespace Objex\Controllers;
 
 use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class APIController
 {
@@ -42,5 +43,28 @@ class APIController
 //            'max_age'       => 10,
 //            's_maxage'      => 10,
 //        ]);
+    }
+
+    public function postAction(Request $request)
+    {
+        setSchema('MyNamespace',[
+            'definition' => [
+                'foo' => [
+                    'type' => 'text',
+                    'validation' => 'strpos(foo, "needed") !== false and strlen(foo) > 3'
+                ],
+                'bar' => [
+                    'type' => 'text',
+                    'validation' => 'strlen(bar) < 3',
+                    'errormessage' => 'bar must not have more than 2 signs'
+                ]
+            ]
+        ]);
+
+        $result = saveObject('MyNamespace',$request->request->all());
+
+        return new JsonResponse([
+            'data' => $result
+        ]);
     }
 }

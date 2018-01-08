@@ -14,4 +14,9 @@ $routes->add('api', new Routing\Route('/api/{name}', array(
     '_controller' => 'Objex\Controllers\APIController::indexAction',
 )));
 
+$routes->add('me', (new Routing\Route('/me/myalias', array(
+    'name' => null,
+    '_controller' => 'Objex\Controllers\APIController::postAction',
+)))->setMethods('POST'));
+
 return $routes;
