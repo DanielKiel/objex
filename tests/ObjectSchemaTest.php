@@ -8,7 +8,7 @@
 
 namespace Simplex\Tests;
 
-use Objex\Models\ObjectSchema;
+use Objex\DBStorage\Models\ObjectSchema;
 use PHPUnit\Framework\TestCase;
 
 class ObjectSchemapTest extends TestCase
@@ -27,7 +27,7 @@ class ObjectSchemapTest extends TestCase
             ObjectSchema::class,
             objex()
             ->get('orm')
-            ->getRepository('Objex\Models\ObjectSchema')
+            ->getRepository('Objex\DBStorage\Models\ObjectSchema')
             ->findOneBy(['name' => 'MyNamespace'])
         );
 
@@ -50,7 +50,7 @@ class ObjectSchemapTest extends TestCase
 
         $this->assertEmpty(objex()
             ->get('orm')
-            ->getRepository('Objex\Models\ObjectSchema')
+            ->getRepository('Objex\DBStorage\Models\ObjectSchema')
             ->findOneBy(['name' => 'MyNamespace']));
 
         $this->expectException(\Exception::class);

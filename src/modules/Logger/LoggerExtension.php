@@ -12,16 +12,16 @@ namespace Objex\Logger;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Objex\Core\Events\Booting;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Objex\Core\Modules\Extension;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class LoggerService implements EventSubscriberInterface
+class LoggerExtension extends Extension
 {
     /**
      * @param Booting $event
      */
-    public function onBooting(Booting $event)
+    public function boot(Booting $event)
     {
         $streamHandler = new StreamHandler(__DIR__ . '/../../storage/logs/objex.log');
         $streamHandler->setFormatter(new LineFormatter());
@@ -41,13 +41,9 @@ class LoggerService implements EventSubscriberInterface
             ->logException($event->getException());
     }
 
-    /**
-     * @return array
-     */
-    public static function getSubscribedEvents()
+    public static function subscribe(): array
     {
         return [
-            'booting' => 'onBooting',
             KernelEvents::EXCEPTION => array('onKernelException', 9999),
         ];
     }

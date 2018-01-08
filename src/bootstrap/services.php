@@ -52,6 +52,9 @@ final class Objex {
         $applicationMode = 'development';
 
         $this->sc = new DependencyInjection\ContainerBuilder();
+
+        $this->sc->set('config', new \Objex\Core\Config\Config());
+
         $this->sc->register('context', Routing\RequestContext::class);
         $this->sc->register('matcher', Routing\Matcher\UrlMatcher::class)
             ->setArguments(array($routes, new Reference('context')))
@@ -75,30 +78,6 @@ final class Objex {
             ->addMethodCall('addSubscriber', array(new Reference('listener.exception')))
         ;
 
-
-        //------- some doctrine experiments
-        if ($applicationMode == "development") {
-            $cache = new \Doctrine\Common\Cache\ArrayCache;
-        } else {
-            $cache = new \Doctrine\Common\Cache\ApcCache;
-        }
-
-        $config = new Configuration;
-        $config->setMetadataCacheImpl($cache);
-        $driverImpl = $config->newDefaultAnnotationDriver(CONFIG_DATABASE_ENTITY_PATHS, false);
-        $config->setMetadataDriverImpl($driverImpl);
-        $config->setQueryCacheImpl($cache);
-        $config->setProxyDir(__DIR__.'/../Proxies');
-        $config->setProxyNamespace('Objex\Proxies');
-        $config->setAutoGenerateProxyClasses($applicationMode === 'development');
-
-        if ('development' === $applicationMode) {
-            $config->setAutoGenerateProxyClasses(ProxyFactory::AUTOGENERATE_EVAL);
-        }
-
-        $this->sc->set('orm', EntityManager::create( CONFIG_DATABASE_CONNECTION, $config, new EventManager()));
-        //-------------------
-
         $this->sc->register('app', App::class)
             ->setArguments(array(
                 new Reference('dispatcher'),
@@ -109,7 +88,7 @@ final class Objex {
         ;
 
         //that is the main event to hook into the framework at the actual dev: write subscriber to Modules!
-        foreach (MODULES as $module) {
+        foreach ($this->sc->get('config')->getConfig('modules') as $module) {
             $this->sc->get('dispatcher')->addSubscriber(new $module);
         }
 

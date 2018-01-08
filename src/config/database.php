@@ -6,13 +6,14 @@
  * Time: 19:44
  */
 
-const CONFIG_DATABASE_CONNECTION = [
-    'driver'   => 'pdo_mysql',
-    'user'     => 'root',
-    'password' => '',
-    'dbname'   => 'objex',
-];
-
-const CONFIG_DATABASE_ENTITY_PATHS = [
-    __DIR__ . '/../Objex/Models'
+return [
+    'connection' => [
+        'driver'   => 'pdo_mysql',
+        'user'     => 'root',
+        'password' => '',
+        'dbname'   => 'objex',
+    ],
+    'entity_paths' => [
+        __DIR__ . '/../modules/DBStorage/Models'
+    ]
 ];

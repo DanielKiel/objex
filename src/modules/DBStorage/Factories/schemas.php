@@ -1,54 +1,63 @@
 <?php
-if (! function_exists('saveObject')) {
+/**
+ * Created by PhpStorm.
+ * User: dk
+ * Date: 05.01.18
+ * Time: 14:43
+ */
+
+if (! function_exists('getSchema')) {
     /**
      * @param string $namespace
-     * @param array $data
-     * @return mixed
+     * @return \Objex\Models\ObjectSchema
      * @throws Exception
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
-    function saveObject(string $namespace, array $data = []) {
-        return objex()
-            ->get('orm')
-            ->getRepository('Objex\Models\BaseObject')
-            ->save($namespace, $data);
+    function getSchema(string $namespace) {
+        $schema = objex()->get('orm')
+            ->getRepository('Objex\DBStorage\Models\ObjectSchema')
+            ->findOneBy(['name' => $namespace]);
+
+        if (! $schema instanceof \Objex\DBStorage\Models\ObjectSchema) {
+            //@TODO make some clear Exceptions
+            throw new \Exception('no schema defined for' . $namespace);
+        }
+
+        return $schema;
     }
 }
 
-if (! function_exists('deleteObject')) {
+if (! function_exists('setSchema')) {
     /**
      * @param string $namespace
-     * @param int $id
+     * @param array $schema
      * @return mixed
      * @throws Exception
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
-    function deleteObject(string $namespace, int $id) {
-        return objex()
-            ->get('orm')
-            ->getRepository('Objex\Models\BaseObject')
-            ->delete($namespace, $id);
+    function setSchema(string $namespace, array $schema) {
+        return  $schema = objex()->get('orm')
+            ->getRepository('Objex\DBStorage\Models\ObjectSchema')
+            ->save($namespace, $schema);
     }
 }
 
-if (! function_exists('bulkObjects')) {
+if (! function_exists('deleteSchema')) {
     /**
      * @param string $namespace
-     * @param array $data
      * @return mixed
      * @throws Exception
      * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
-    function bulkObjects(string $namespace, array $data = []) {
-        return objex()
-            ->get('orm')
-            ->getRepository('Objex\Models\BaseObject')
-            ->bulkObjects($namespace, $data);
+    function deleteSchema(string $namespace) {
+        return  $schema = objex()->get('orm')
+            ->getRepository('Objex\DBStorage\Models\ObjectSchema')
+            ->delete($namespace);
     }
 }

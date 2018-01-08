@@ -6,8 +6,10 @@
  * Time: 20:03
  */
 
-const MODULES = [
-    \Objex\ExpressionLanguage\ExpressionLanguageService::class,
-    \Objex\Logger\LoggerService::class,
-    \Objex\Validation\ValidatorService::class
+return [
+    \Objex\DBStorage\DBStorageExtension::class,
+    \Objex\ExpressionLanguage\ExpressionLanguageExtension::class,
+    \Objex\Logger\LoggerExtension::class,
+    \Objex\Validation\ValidatorExtension::class
 ];
+

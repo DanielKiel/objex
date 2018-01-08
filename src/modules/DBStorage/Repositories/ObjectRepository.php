@@ -6,13 +6,14 @@
  * Time: 20:28
  */
 
-namespace Objex\API\Object;
+namespace Objex\DBStorage\Repositories;
 
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Objex\Core\API\Repositories\Pagination;
-use Objex\Models\BaseObject;
+use Objex\DBStorage\Repositories\Traits\Pagination;
+use Objex\DBStorage\Models\BaseObject;
+use Objex\DBStorage\Contracts\ObjectContract;
 
 class ObjectRepository extends EntityRepository implements ObjectContract
 {
@@ -46,7 +47,7 @@ class ObjectRepository extends EntityRepository implements ObjectContract
         $object = null;
         if (array_key_exists('id', $data)) {
             $object = objex()->get('orm')
-                ->getRepository('Objex\Models\BaseObject')
+                ->getRepository('Objex\DBStorage\Models\BaseObject')
                 ->find($data['id']);
 
             unset($data['id']);

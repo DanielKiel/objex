@@ -6,6 +6,6 @@
  * Time: 10:45
  */
 
-const SCHEMA_DEFAULT_CONFIGURATION = [
+return [
     'validationType' => 'only'
 ];

@@ -10,13 +10,13 @@ namespace Objex\Validation;
 
 
 use Objex\Core\Events\Booting;
+use Objex\Core\Modules\Extension;
 use Objex\Validation\Controllers\ErrorController;
 use Objex\Validation\Exceptions\ValidationException;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class ValidatorService implements EventSubscriberInterface
+class ValidatorExtension extends Extension
 {
     /**
      * when not validated, we will have our own response here
@@ -42,7 +42,7 @@ class ValidatorService implements EventSubscriberInterface
      * @param Booting $event
      * @throws \Exception
      */
-    public function onBooting(Booting $event)
+    public function boot(Booting $event)
     {
         $this->hasServices([
             'objex.language'
@@ -53,20 +53,13 @@ class ValidatorService implements EventSubscriberInterface
             ->addEventSubscriber(new Validator());
     }
 
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function subscribe(): array
     {
         return [
-            'booting' => 'onBooting',
             KernelEvents::EXCEPTION => array('onKernelException', 0),
         ];
-    }
-
-    public function hasServices(array $services = [])
-    {
-        foreach ($services as $service) {
-            if (! objex()->has($service)) {
-                throw new \Exception('service not defined: ' . $service);
-            }
-        }
     }
 }

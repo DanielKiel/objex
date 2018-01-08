@@ -11,18 +11,18 @@ namespace Objex\ExpressionLanguage;
 
 
 use Objex\Core\Events\Booting;
+use Objex\Core\Modules\Extension;
 use Objex\ExpressionLanguage\Specifications\StringExpressionLanguageProvider;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-class ExpressionLanguageService implements EventSubscriberInterface
+class ExpressionLanguageExtension extends Extension
 {
     /**
      * we register at booting to register our global doctrine subscriber here
      * @param Booting $event
      * @throws \Exception
      */
-    public function onBooting(Booting $event)
+    public function boot(Booting $event)
     {
         $event->getServiceContainer()
             ->set('objex.language', new ExpressionLanguage(null, [
@@ -30,10 +30,4 @@ class ExpressionLanguageService implements EventSubscriberInterface
             ]));
     }
 
-    public static function getSubscribedEvents()
-    {
-        return [
-            'booting' => 'onBooting'
-        ];
-    }
 }

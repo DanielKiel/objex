@@ -6,14 +6,14 @@
  * Time: 15:42
  */
 
-namespace Objex\Models;
+namespace Objex\DBStorage\Models;
 
 
 use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @ORM\Entity(repositoryClass="Objex\API\Object\ObjectRepository")
+ * @ORM\Entity(repositoryClass="Objex\DBStorage\Repositories\ObjectRepository")
  * @ORM\Table(name="objects")
  **/
 class BaseObject
@@ -28,7 +28,7 @@ class BaseObject
     protected $data;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Objex\Models\ObjectSchema")
+     * @ORM\ManyToOne(targetEntity="Objex\DBStorage\Models\ObjectSchema")
      * @ORM\JoinColumn(name="schema_id", referencedColumnName="id", nullable=false)
      *
      */

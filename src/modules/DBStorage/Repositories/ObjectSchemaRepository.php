@@ -6,12 +6,13 @@
  * Time: 12:38
  */
 
-namespace Objex\API\ObjectSchema;
+namespace Objex\DBStorage\Repositories;
 
 
 use Doctrine\ORM\EntityRepository;
-use Objex\Core\API\Repositories\Pagination;
-use Objex\Models\ObjectSchema;
+use Objex\DBStorage\Repositories\Traits\Pagination;
+use Objex\DBStorage\Contracts\ObjectSchemaContract;
+use Objex\DBStorage\Models\ObjectSchema;
 
 class ObjectSchemaRepository extends EntityRepository implements ObjectSchemaContract
 {

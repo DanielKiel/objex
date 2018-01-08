@@ -6,7 +6,7 @@
  * Time: 12:05
  */
 
-namespace Objex\Core\API\Repositories;
+namespace Objex\DBStorage\Repositories\Traits;
 
 
 use Doctrine\ORM\Tools\Pagination\Paginator;

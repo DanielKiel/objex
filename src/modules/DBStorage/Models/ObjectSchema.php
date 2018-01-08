@@ -6,13 +6,14 @@
  * Time: 15:42
  */
 
-namespace Objex\Models;
+namespace Objex\DBStorage\Models;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Objex\Core\Config\Config;
 
 /**
- * @ORM\Entity(repositoryClass="Objex\API\ObjectSchema\ObjectSchemaRepository")
+ * @ORM\Entity(repositoryClass="Objex\DBStorage\Repositories\ObjectSchemaRepository")
  * @ORM\Table(name="object_schemas")
  * @ORM\HasLifecycleCallbacks
  **/
@@ -97,11 +98,11 @@ class ObjectSchema
         $data = $this->getData();
 
         if (! array_key_exists('configuration', $data)) {
-            return SCHEMA_DEFAULT_CONFIGURATION;
+            return objex()->get('config')->getConfig('schema');
         }
 
         if (! is_array($data['configuration'])) {
-            return SCHEMA_DEFAULT_CONFIGURATION;
+            return objex()->get('config')->getConfig('schema');
         }
 
         return $data['configuration'];
@@ -128,7 +129,7 @@ class ObjectSchema
     public function removeObjects()
     {
         $objects = objex()->get('orm')
-            ->getRepository('Objex\Models\BaseObject')
+            ->getRepository('Objex\DBStorage\Models\BaseObject')
             ->findBy(['schema' => $this]);
 
         $em = objex()->get('orm');
