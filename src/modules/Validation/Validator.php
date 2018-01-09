@@ -13,15 +13,27 @@ use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Objex\DBStorage\Models\BaseObject;
-use Objex\DBStorage\Models\ObjectSchema;
 use Objex\Validation\Exceptions\ValidationException;
 use Objex\Validation\Util\RemoveUnAllowedAttributes;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 class Validator implements EventSubscriber
 {
+    private $errors;
+
+    private $language;
+
+    private $on = '';
+
+    public function __construct()
+    {
+        /** @var ExpressionLanguage $language */
+        $this->language = objex()->get('ExpressionLanguage');
+    }
+
     public function getSubscribedEvents()
     {
         return array(
@@ -32,131 +44,84 @@ class Validator implements EventSubscriber
     }
 
     /**
-     * will validate before creating
      * @param LifecycleEventArgs $args
+     * @throws ValidationException
+     * @throws \Exception
      */
     public function prePersist(LifecycleEventArgs $args)
     {
-        $entity = $args->getObject();
-
-        if (! $entity instanceof BaseObject) {
-            return;
-        }
-
-        /* @TODO here must be: get definition by schema, then make validation - think about when failing
-         * throw own exception to can handle an own validation error return at controller by following event of exception !
-         */
-        $schema = $entity->getSchema();
-
-        $definition = $schema->getDefinition();
-
-        $validationType = $schema->getValidationType();
-
-        if ($validationType === 'only') {
-            $this->performValidationResult(
-                RemoveUnAllowedAttributes::remove($entity->getData(), $definition),
-                $definition
-            );
-
-            return;
-        }
-
-        if ($validationType === 'min') {
-            $this->performValidationResult($entity->getData(), $definition);
-
-            return;
-        }
-
+        $this->on = 'onPrePersist';
+        $this->performValidationResult($args);
     }
 
     /**
-     * will validate before updating
      * @param LifecycleEventArgs $args
+     * @throws ValidationException
+     * @throws \Exception
      */
     public function preUpdate(LifecycleEventArgs $args)
     {
-
+        $this->on = 'onPreUpdate';
+        $this->performValidationResult($args);
     }
 
     /**
-     * will validate before deleting
      * @param LifecycleEventArgs $args
+     * @throws ValidationException
+     * @throws \Exception
      */
     public function preRemove(LifecycleEventArgs $args)
     {
-
-    }
-
-    /**
-     * @param array $attributes
-     * @param array $definition
-     */
-    public function performValidationResult(array $attributes, array $definition = []): void
-    {
-        $result = $this->validate($attributes, $definition);
-
-        if (! empty($result)) {
-            throw (new ValidationException($result));
-        }
+        $this->on = 'onPreRemove';
+        $this->performValidationResult($args);
     }
 
     /**
      * @param array $attributes
      * @param array $definition
      * @return array
+     * @throws \Exception
      */
     public function validate(array $attributes, array $definition = []): array
     {
-        $language = objex()->get('ExpressionLanguage');
-
-        $errors = [];
+        $this->errors = [];
 
         foreach ($definition as $attribute => $ruleset) {
-            if (! array_key_exists('validation', $ruleset)) {
-                continue;
-            }
-
-            if (! array_key_exists($attribute, $attributes)) {
-                continue;
-            }
-
-            $validation = $ruleset['validation'];
-
-            if (is_string($validation)) {
-                $result = $this->validateByExpression($language, $validation, $attribute, $attributes[$attribute]);
-
-                if ($result === false) {
-                    if (array_key_exists('errormessage', $ruleset)) {
-                        $errors[$attribute] = $ruleset['errormessage'];
-                    }
-                    else {
-                        $errors[$attribute] = 'there was an error on validating this attribute';
-                    }
-
-                }
-            }
-
-            if (is_object($validation) || is_array($validation)) {
-
-                if (is_object($validation) && ! $validation instanceof Constraint) {
-                    throw new \Exception('Validation missconfigured, definition of ' . get_class($validation) . ' is not supported');
-                }
-
-                $validator = Validation::createValidator();
-                $results = $validator->validate($attributes[$attribute], $validation);
-
-                if ($results->count() > 0) {
-                    $errors[$attribute] = '';
-                    foreach ($results as $error) {
-                        $errors[$attribute] .= $error->getMessage();
-                    }
-                }
-
-
-            }
+            $this->validateRuleSet($ruleset, $attributes, $attribute);
         }
 
-        return $errors;
+        return $this->errors;
+    }
+
+    /**
+     * @param LifecycleEventArgs $args
+     * @throws ValidationException
+     * @throws \Exception
+     */
+    protected function performValidationResult(LifecycleEventArgs $args): void
+    {
+        $entity = $args->getObject();
+
+        if (! $entity instanceof BaseObject) {
+            return;
+        }
+        $schema = $entity->getSchema();
+
+        $definition = $schema->getDefinition();
+
+        $validationType = $schema->getValidationType();
+
+        $attributes = $entity->getData();
+        if ($validationType === 'only') {
+            $attributes = RemoveUnAllowedAttributes::remove($attributes, $definition);
+        }
+
+
+        $errors = $this->validate($attributes, $definition);
+
+        if (! empty($errors)) {
+            throw (new ValidationException($errors));
+        }
     }
 
     /**
@@ -166,7 +131,7 @@ class Validator implements EventSubscriber
      * @param $value
      * @return bool
      */
-    public function validateByExpression(ExpressionLanguage $language, string $rule, string $attribute, $value): bool
+    protected function validateByExpression(ExpressionLanguage $language, string $rule, string $attribute, $value): bool
     {
         return $language->evaluate(
             $rule,
@@ -175,4 +140,91 @@ class Validator implements EventSubscriber
             )
         );
     }
+
+    /**
+     * @param array $ruleset
+     * @param array $attributes
+     * @param string $attribute
+     * @throws \Exception
+     */
+    protected function validateRuleSet(array $ruleset, array $attributes, string $attribute)
+    {
+        if (! $this->haveToBeValidated($ruleset, $attributes, $attribute)) {
+            return;
+        }
+
+        $validation = $ruleset['validation'];
+
+        if (is_string($validation)) {
+            $this->pushErrors(
+                $this->validateByExpression($this->language, $validation, $attribute, $attributes[$attribute]),
+                $ruleset,
+                $attribute
+            );
+
+            return;
+        }
+
+        if (is_object($validation) && ! $validation instanceof Constraint) {
+            throw new \Exception('Validation missconfigured, definition of ' . get_class($validation) . ' is not supported');
+        }
+
+        $this->pushErrors(
+            (Validation::createValidator())
+                ->validate($attributes[$attribute], $validation),
+            $ruleset,
+            $attribute
+        );
+    }
+
+    /**
+     * @param array $ruleset
+     * @param array $attributes
+     * @param string $attribute
+     * @return bool
+     */
+    protected function haveToBeValidated(array $ruleset, array $attributes, string $attribute): bool
+    {
+        if (! array_key_exists('validation', $ruleset)) {
+            return false;
+        }
+
+        if (! array_key_exists($attribute, $attributes)) {
+            //when validation is defined and attribute is not here on create, we must throw an error
+            if ($this->on === 'onPrePersist') {
+                $this->pushErrors($result = false, $ruleset, $attribute);
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param bool|ConstraintViolationListInterface $result
+     * @param array $ruleset
+     * @param string $attribute
+     */
+    protected function pushErrors($result, array $ruleset, string $attribute): void
+    {
+        if (is_bool($result) && $result === false) {
+            if (array_key_exists('errormessage', $ruleset)) {
+                $this->errors[$attribute] = $ruleset['errormessage'];
+            }
+            else {
+                $this->errors[$attribute] = 'there was an error on validating this attribute';
+            }
+
+            return;
+        }
+
+        if ($result instanceof ConstraintViolationListInterface && $result->count() > 0) {
+            $this->errors[$attribute] = '';
+            foreach ($result as $error) {
+                $this->errors[$attribute] .= $error->getMessage();
+            }
+        }
+    }
+
 }

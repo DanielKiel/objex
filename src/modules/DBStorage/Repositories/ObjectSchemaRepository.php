@@ -22,8 +22,6 @@ class ObjectSchemaRepository extends EntityRepository implements ObjectSchemaCon
      * @param string $namespace
      * @param array $data
      * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(string $namespace, array $data = [])
     {
@@ -51,8 +49,6 @@ class ObjectSchemaRepository extends EntityRepository implements ObjectSchemaCon
     /**
      * @param $namespace
      * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function delete($namespace)
     {
@@ -71,5 +67,10 @@ class ObjectSchemaRepository extends EntityRepository implements ObjectSchemaCon
             //2TODO think about it
             dump($e);
         }
+    }
+
+    public function convertNamespaceToArray($namespace)
+    {
+
     }
 }

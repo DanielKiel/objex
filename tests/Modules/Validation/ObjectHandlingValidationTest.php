@@ -7,9 +7,9 @@
  */
 
 
-class ExpressionValidationTest extends \PHPUnit\Framework\TestCase
+class ObjectHandlingValidationTest extends \PHPUnit\Framework\TestCase
 {
-    public function testArrayGetFalseValidation()
+    public function testValidation()
     {
         $definition = [
             'foo' => [
@@ -23,15 +23,17 @@ class ExpressionValidationTest extends \PHPUnit\Framework\TestCase
             ]
         ];
 
-        $attributes = [
+        setSchema('MyNamespace', [
+            'definition' => $definition
+        ]);
+
+        $this->expectException(\Objex\Validation\Exceptions\ValidationException::class);
+
+        saveObject('MyNamespace',[
             'foo' => 'needed value',
             'bar' => 'value'
-        ];
+        ]);
 
-        $validator = new \Objex\Validation\Validator();
-
-        $result = $validator->validate($attributes, $definition);
-
-        $this->assertEquals(['bar'=>'bar must not have more than 2 signs'],$result);
+        deleteSchema('MyNamespace');
     }
 }

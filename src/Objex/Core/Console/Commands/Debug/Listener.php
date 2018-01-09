@@ -6,7 +6,7 @@
  * Time: 15:46
  */
 
-namespace Objex\Core\Console\Commands\Lister;
+namespace Objex\Core\Console\Commands\Debug;
 
 
 use Symfony\Component\Console\Command\Command;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ListListener extends Command
+class Listener extends Command
 {
     protected static $defaultName = 'list:listener';
     protected $dispatcher;
