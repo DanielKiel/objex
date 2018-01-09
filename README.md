@@ -74,6 +74,14 @@ php vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
 
 this will not do any migration yet - it is some natural doctrine handling here, not less or more
 
+## Console
+
+listing available commands
+
+```
+php objex.php list
+```
+
 
 ## Modules
 
