@@ -15,4 +15,3 @@ $request = Request::createFromGlobals();
 $response = objex()->get('app')->handle($request);
 
 $response->send();
-

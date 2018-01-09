@@ -13,7 +13,12 @@
         "symfony/expression-language": "^4.0",
         "monolog/monolog": "^1.23",
         "symfony/filesystem": "^4.0",
-        "symfony/finder": "^4.0"
+        "symfony/finder": "^4.0",
+        "symfony/stopwatch": "^4.0",
+        "symfony/security": "^4.0",
+        "guzzlehttp/guzzle": "^6.3",
+        "symfony/dotenv": "^4.0",
+        "defuse/php-encryption": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -21,7 +26,8 @@
             "Objex\\Validation\\": "src/modules/Validation",
             "Objex\\ExpressionLanguage\\": "src/modules/ExpressionLanguage",
             "Objex\\Logger\\": "src/modules/Logger",
-            "Objex\\DBStorage\\": "src/modules/DBStorage"
+            "Objex\\DBStorage\\": "src/modules/DBStorage",
+            "Objex\\Security\\": "src/modules/Security"
         },
         "files": [
             "src/util/pathhelper.php",

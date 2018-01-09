@@ -1,6 +1,9 @@
 ## not-production-ready
 this is only some firts coding stuff - do not use it in production, it can have a lot of breaks till it will be alpha and later beta ready
 
+At the moment this framework is build on top of a lot of symfony4 components - but it will not be dpendend to use only components of symfony.
+The aim is to really simple can include other packages too.
+You must only decide on which event(s) you want to listen for.
 
 ## idea behind
 this should be get a microframework to handle an api server  

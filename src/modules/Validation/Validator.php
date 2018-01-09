@@ -12,6 +12,7 @@ namespace Objex\Validation;
 use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Objex\DBStorage\Models\BaseObject;
 use Objex\DBStorage\Models\ObjectSchema;
 use Objex\Validation\Exceptions\ValidationException;
 use Objex\Validation\Util\RemoveUnAllowedAttributes;
@@ -38,7 +39,7 @@ class Validator implements EventSubscriber
     {
         $entity = $args->getObject();
 
-        if ($entity instanceof ObjectSchema) {
+        if (! $entity instanceof BaseObject) {
             return;
         }
 

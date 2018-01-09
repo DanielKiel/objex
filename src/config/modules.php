@@ -8,6 +8,7 @@
 
 return [
     \Objex\DBStorage\DBStorageExtension::class,
+    \Objex\Security\M2MSecurityExtension::class,
     \Objex\ExpressionLanguage\ExpressionLanguageExtension::class,
     \Objex\Logger\LoggerExtension::class,
     \Objex\Validation\ValidatorExtension::class

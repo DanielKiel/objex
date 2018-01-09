@@ -6,7 +6,7 @@
  * Time: 14:36
  */
 
-namespace Objex\Controllers;
+namespace Objex\Core\Controllers;
 
 
 use Symfony\Component\HttpFoundation\Response;

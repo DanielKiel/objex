@@ -11,12 +11,12 @@ $routes = new Routing\RouteCollection();
 
 $routes->add('api', new Routing\Route('/api/{name}', array(
     'name' => null,
-    '_controller' => 'Objex\Controllers\APIController::indexAction',
+    '_controller' => 'Objex\Core\Controllers\APIController::indexAction',
 )));
 
 $routes->add('me', (new Routing\Route('/me/myalias', array(
     'name' => null,
-    '_controller' => 'Objex\Controllers\APIController::postAction',
+    '_controller' => 'Objex\Core\Controllers\APIController::postAction',
 )))->setMethods('POST'));
 
 return $routes;

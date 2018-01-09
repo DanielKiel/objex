@@ -5,7 +5,7 @@
  * Date: 04.01.18
  * Time: 10:28
  */
-namespace Objex\Controllers;
+namespace Objex\Core\Controllers;
 
 use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\JsonResponse;

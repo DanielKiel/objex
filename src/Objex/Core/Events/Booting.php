@@ -17,11 +17,18 @@ class Booting extends Event
     /** @var ContainerBuilder  */
     private $sc;
 
+    /**
+     * Booting constructor.
+     * @param ContainerBuilder $sc
+     */
     public function __construct(ContainerBuilder $sc)
     {
         $this->sc = $sc;
     }
 
+    /**
+     * @return ContainerBuilder
+     */
     public function getServiceContainer()
     {
         return $this->sc;

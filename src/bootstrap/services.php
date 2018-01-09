@@ -12,10 +12,7 @@ use Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpKernel;
 use Symfony\Component\Routing;
 use Symfony\Component\EventDispatcher;
-use Doctrine\ORM\EntityManager;
-use Doctrine\Common\EventManager;
-use Doctrine\ORM\Configuration;
-use Doctrine\ORM\Proxy\ProxyFactory;
+use Symfony\Component\Dotenv\Dotenv;
 use Objex\App;
 
 
@@ -47,6 +44,9 @@ final class Objex {
         if ($this->sc instanceof DependencyInjection\ContainerBuilder) {
             return;
         }
+
+        $dotenv = new Dotenv();
+        $dotenv->load(__DIR__ .'/../../.env');
 
         $routes = include __DIR__.'/../routes.php';
 
@@ -85,6 +85,8 @@ final class Objex {
                 new Reference('argument_resolver'),
             ))
         ;
+
+        $this->sc->set('crypto', new \Objex\Core\Cryptography\Cryptography());
 
         //that is the main event to hook into the framework at the actual dev: write subscriber to Modules!
         foreach ($this->sc->get('config')->getConfig('modules') as $module) {

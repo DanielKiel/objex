@@ -6,8 +6,8 @@
  * Time: 15:36
  */
 
-$sc = include "src/bootstrap/services.php";
+//$sc = include "src/bootstrap/services.php";
 
 return \Doctrine\ORM\Tools\Console\ConsoleRunner::createHelperSet(
-    $sc->get('orm')
+    objex()->get('DBStorage')
 );
