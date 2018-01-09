@@ -104,7 +104,6 @@ class M2MSecurityExtension extends Extension
             return true;
         }
 
-
         $guard = false;
         foreach ($map as $match) {
             $requestMatcher = new RequestMatcher($match);

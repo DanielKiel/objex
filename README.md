@@ -84,24 +84,58 @@ namespace Objex\Validation;
 
 
 use Objex\Core\Events\Booting;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Objex\Core\Modules\Extension;
+use Objex\Validation\Controllers\ErrorController;
+use Objex\Validation\Exceptions\ValidationException;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
-class ValidatorService implements EventSubscriberInterface
+class ValidatorExtension extends Extension
 {
-    public function onBooting(Booting $event)
+    /**
+     * when not validated, we will have our own response here
+     * also we stop propagation, it is not ncessary to make more stuff when request is not valid
+     * @param GetResponseForExceptionEvent $event
+     */
+    public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        $event->getServiceContainer()->get('orm')
+        $exception = $event->getException();
+
+        if (! $exception instanceof ValidationException) {
+            return;
+        }
+
+        $response = (new ErrorController())->errorAction($exception);
+
+        $event->setResponse($response);
+        $event->stopPropagation();
+    }
+
+    /**
+     * we register at booting to register our global doctrine subscriber here
+     * @param Booting $event
+     * @throws \Exception
+     */
+    public function boot(Booting $event)
+    {
+        $this->hasServices([
+            'ExpressionLanguage'
+        ]);
+
+        $event->getServiceContainer()->get('DBStorage')
             ->getEventManager()
             ->addEventSubscriber(new Validator());
+
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            'booting' => 'onBooting'
+            'booting' => 'boot',
+             KernelEvents::EXCEPTION => array('onKernelException', 0),
         ];
     }
-}
+}}
 
 ```
 

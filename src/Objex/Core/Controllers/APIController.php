@@ -14,11 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 class APIController
 {
     /**
-     * this is only an example at the moment
-     *
      * @param $name
      * @return JsonResponse
-     * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function indexAction($name)
     {

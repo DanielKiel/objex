@@ -36,4 +36,52 @@ class M2MExtensionTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEmpty($foundByApiKey);
     }
+
+    public function testAuthenticationNotSuccessful()
+    {
+        objex()->get('config')->setConfig([
+            'firewall' => [
+                'urlMap' => [ // '^/'
+                    '^/'
+                ]
+            ]
+        ]);
+
+        $client = new \GuzzleHttp\Client([
+            'exceptions' => false
+        ]);
+
+        $baseUrl = getenv('APP_URL');
+
+        $result = $client->get($baseUrl);
+
+        $this->assertEquals(401, $result->getStatusCode());
+    }
+
+    public function testAuthenticationSuccessful()
+    {
+        $repo = objex()->get('DBStorage')
+            ->getRepository('Objex\Security\Models\Machine');
+
+        $name = 'MyMachine_' . uniqid();
+
+        $machine = $repo->save($name);
+
+        $client = new \GuzzleHttp\Client([
+            'exceptions' => false
+        ]);
+
+        $baseUrl = getenv('APP_URL');
+
+        $result = $client->get($baseUrl,[
+            'headers' => [
+                'X-Auth-Token' => $machine->getApiKey()
+            ]
+        ]);
+
+        $this->assertEquals(200, $result->getStatusCode());
+
+        objex()->get('DBStorage')->remove($machine);
+        objex()->get('DBStorage')->flush();
+    }
 }

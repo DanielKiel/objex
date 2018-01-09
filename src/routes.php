@@ -9,6 +9,11 @@ use Symfony\Component\Routing;
 
 $routes = new Routing\RouteCollection();
 
+$routes->add('home', new Routing\Route('/', array(
+    'name' => null,
+    '_controller' => 'Objex\Core\Controllers\HomeController::indexAction',
+)));
+
 $routes->add('api', new Routing\Route('/api/{name}', array(
     'name' => null,
     '_controller' => 'Objex\Core\Controllers\APIController::indexAction',

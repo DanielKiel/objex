@@ -14,11 +14,17 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class MachineProvider implements UserProviderInterface
 {
-    public function loadUserByUsername($username)
+    /**
+     * cause we have to follow the interface rules, method name is not the same as real criteria - we ask for username
+     * @param string $apiKey
+     * @return UserInterface
+     * @throws \Exception
+     */
+    public function loadUserByUsername($apiKey)
     {
         return objex()->get('DBStorage')
             ->getRepository('Objex\Security\Models\Machine')
-            ->findOneBy(['apiKey', $username]);
+            ->findOneBy(['apiKey' => $apiKey]);
     }
 
     public function refreshUser(UserInterface $user)
