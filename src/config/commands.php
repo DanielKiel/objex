@@ -9,5 +9,6 @@
 return [
     \Symfony\Component\Console\Command\HelpCommand::class,
     \Symfony\Component\Console\Command\ListCommand::class,
-    \Objex\Core\Console\Commands\Lister\ListEvents::class
+    \Objex\Core\Console\Commands\Lister\ListListener::class,
+    \Objex\Core\Console\Commands\Lister\ListServices::class,
 ];

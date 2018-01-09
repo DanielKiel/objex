@@ -9,19 +9,14 @@
 namespace Objex\Core\Console\Commands\Lister;
 
 
-
-use Symfony\Component\Console\Helper\DescriptorHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class ListEvents extends Command
+class ListListener extends Command
 {
     protected static $defaultName = 'list:listener';
     protected $dispatcher;
@@ -88,14 +83,5 @@ EOF
         }
 
         $helper->render();
-
-
-
-
-//        $helper = new DescriptorHelper();
-//        $options['format'] = $input->getOption('format');
-//        $options['raw_text'] = $input->getOption('raw');
-//        $options['output'] = $io;
-//        $helper->describe($io, $this->dispatcher, $options);
     }
 }
