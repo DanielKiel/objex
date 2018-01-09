@@ -2,4 +2,4 @@
 .codereport/
 /vendor
 composer.lock
-.env
+/.env
