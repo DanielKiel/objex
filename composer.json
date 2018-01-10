@@ -18,7 +18,8 @@
         "guzzlehttp/guzzle": "^6.3",
         "symfony/dotenv": "^4.0",
         "defuse/php-encryption": "^2.1",
-        "symfony/validator": "^4.0"
+        "symfony/validator": "^4.0",
+        "symfony/cache": "^4.0"
     },
     "autoload": {
         "psr-4": {

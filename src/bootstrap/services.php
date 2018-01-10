@@ -101,6 +101,9 @@ final class Objex {
         $this->sc->set('config', new \Objex\Core\Config\Config());
 
         $this->sc->set('crypto', new \Objex\Core\Cryptography\Cryptography());
+
+        $this->sc->register('cache', \Objex\Core\Cache\Cache::class)
+            ->setArgument('adapter', new \Symfony\Component\Cache\Adapter\FilesystemAdapter());
     }
 
     protected function boot()

@@ -6,9 +6,10 @@
  * Time: 10:58
  */
 
-namespace Simplex\Tests;
 
 use GuzzleHttp\Client;
+use Objex\Core\Cache\Cache;
+use Objex\Core\Cache\Exceptions\CacheException;
 use Objex\Core\Config\Config;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\Route;
