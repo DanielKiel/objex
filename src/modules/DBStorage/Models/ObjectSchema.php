@@ -92,6 +92,7 @@ class ObjectSchema
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function getConfiguration():array
     {
@@ -108,6 +109,10 @@ class ObjectSchema
         return $data['configuration'];
     }
 
+    /**
+     * @return string
+     * @throws \Exception
+     */
     public function getValidationType(): string
     {
         $config = $this->getConfiguration();
@@ -125,6 +130,7 @@ class ObjectSchema
 
     /**
      * @ORM\PreRemove
+     * @throws \Exception
      */
     public function removeObjects()
     {

@@ -9,7 +9,6 @@
 namespace Simplex\Tests;
 
 use Objex\Core\Config\Config;
-use Objex\Models\ObjectSchema;
 use PHPUnit\Framework\TestCase;
 
 class AppTest extends TestCase
@@ -21,14 +20,14 @@ class AppTest extends TestCase
 
     public function testConfig()
     {
-        //Config::initDefaultConfig(objex());
-
         objex()->get('config')->setConfig([
             'logger' => [
                 'path' => 'explicit/m-path'
             ]
         ]);
 
-        dump(objex()->get('config')->getConfig('logger'));
+        $logs = objex()->get('config')->getConfig('logger');
+
+        $this->assertEquals('explicit/m-path', $logs['path']);
     }
 }

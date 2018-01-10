@@ -23,22 +23,28 @@ class ConstraintValidationTest extends \PHPUnit\Framework\TestCase
             'bar' => [
                 'type' => 'text',
                 'validation' => new \Symfony\Component\Validator\Constraints\Length(['max' => 2]),
-                'errormessage' => 'bar must not have more than 2 signs'
+            ],
+            'bar_2' => [
+                'type' => 'text',
+                'validation' => new \Symfony\Component\Validator\Constraints\Length(['max' => 2]),
+                'errormessage' => 'bar must not have more than 2 signs - cause of default message'
             ]
         ];
 
         $attributes = [
             'foo' => 'needed value',
-            'bar' => 'value'
+            'bar' => 'value',
+            'bar_2' => 'value'
         ];
 
-        $validator = new \Objex\Validation\Validator();
+        $validator = new \Objex\Validation\Validators\BaseObjectValidator(new \Objex\DBStorage\Models\BaseObject());
 
         $result = $validator->validate($attributes, $definition);
 
         $this->assertEquals([
             "foo" => "This value is not a valid email address.",
-            "bar" => "This value is too long. It should have 2 characters or less."
+            "bar" => "This value is too long. It should have 2 characters or less.",
+            "bar_2" => "bar must not have more than 2 signs - cause of default message"
         ], $result);
 
         //when an object, it must be of instance Constraint, so an exception will be thrown

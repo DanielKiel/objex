@@ -68,9 +68,4 @@ class ObjectSchemaRepository extends EntityRepository implements ObjectSchemaCon
             dump($e);
         }
     }
-
-    public function convertNamespaceToArray($namespace)
-    {
-
-    }
 }

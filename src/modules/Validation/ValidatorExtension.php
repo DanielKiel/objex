@@ -13,14 +13,19 @@ use Objex\Core\Events\Booting;
 use Objex\Core\Modules\Extension;
 use Objex\Validation\Controllers\ErrorController;
 use Objex\Validation\Exceptions\ValidationException;
+use Objex\Validation\Validators\DBStorageValidator;
+use Objex\Validation\Validators\Types\ConstraintsValidator;
+use Objex\Validation\Validators\Types\ExpressionLanguageValidator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Validator\Validation;
 
 class ValidatorExtension extends Extension
 {
     /**
      * when not validated, we will have our own response here
-     * also we stop propagation, it is not ncessary to make more stuff when request is not valid
+     * also we stop propagation, it is not necessary to make more stuff when request is not valid
      * @param GetResponseForExceptionEvent $event
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
@@ -45,12 +50,21 @@ class ValidatorExtension extends Extension
     public function boot(Booting $event)
     {
         $this->hasServices([
-            'ExpressionLanguage'
+            'ExpressionLanguage',
+            'DBStorage'
         ]);
+
+        $event->getServiceContainer()
+            ->register('Validation.ExpressionLanguage', ExpressionLanguageValidator::class)
+            ->setArgument('language', new Reference('ExpressionLanguage'));
+
+        $event->getServiceContainer()
+            ->register('Validation.Constraints', ConstraintsValidator::class)
+            ->setArgument('validator', Validation::createValidator());
 
         $event->getServiceContainer()->get('DBStorage')
             ->getEventManager()
-            ->addEventSubscriber(new Validator());
+            ->addEventSubscriber(new DBStorageSubscriber());
 
     }
 

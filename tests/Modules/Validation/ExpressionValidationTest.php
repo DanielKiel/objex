@@ -28,7 +28,7 @@ class ExpressionValidationTest extends \PHPUnit\Framework\TestCase
             'bar' => 'value'
         ];
 
-        $validator = new \Objex\Validation\Validator();
+        $validator = new \Objex\Validation\Validators\BaseObjectValidator(new \Objex\DBStorage\Models\BaseObject());
 
         $result = $validator->validate($attributes, $definition);
 
