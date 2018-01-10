@@ -21,6 +21,7 @@ class ObjectSchemaRepository extends EntityRepository implements ObjectSchemaCon
     /**
      * @param string $namespace
      * @param array $data
+     * @return null|object|ObjectSchema
      * @throws \Doctrine\ORM\ORMException
      */
     public function save(string $namespace, array $data = [])
@@ -44,6 +45,7 @@ class ObjectSchemaRepository extends EntityRepository implements ObjectSchemaCon
             dump($e);
         }
 
+        return $schema;
     }
 
     /**

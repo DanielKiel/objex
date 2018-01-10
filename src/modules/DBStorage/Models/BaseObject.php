@@ -80,6 +80,7 @@ class BaseObject
 
     /**
      * @return ObjectSchema
+     * @throws \Exception
      */
     public function getSchema(): ObjectSchema
     {

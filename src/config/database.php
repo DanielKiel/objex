@@ -15,5 +15,12 @@ return [
     ],
     'entity_paths' => [
         __DIR__ . '/../modules/DBStorage/Models'
+    ],
+    'cache' => [
+        'adapter' => new \Symfony\Component\Cache\Adapter\FilesystemAdapter(),
+        /* optimize: choose between read or write - dependent to the config DBStorage will decide
+         *  when to aggregate an object and cache the result
+         */
+        'optimize' => 'read'
     ]
 ];

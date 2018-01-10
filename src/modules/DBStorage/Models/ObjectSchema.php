@@ -69,14 +69,7 @@ class ObjectSchema
      */
     protected function setAlias($name): void
     {
-        if (! ctype_lower($name)) {
-            //$name =str_replace('\\', '_', $name);
-            $name = preg_replace('/\s+/u', '', ucwords($name));
-            $name = strtolower(preg_replace('/(.)(?=[A-Z])/u', '$1-', $name));
-            $name =str_replace('\\-', '_', $name);
-        }
-
-        $this->alias = $name;
+        $this->alias = encodeNamespace($name);
     }
 
     /**

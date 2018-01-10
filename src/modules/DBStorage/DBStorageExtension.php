@@ -9,12 +9,14 @@
 namespace Objex\DBStorage;
 
 
+use Objex\Core\Cache\Cache;
 use Objex\Core\Events\Booting;
 use Objex\Core\Modules\Extension;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\Proxy\ProxyFactory;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class DBStorageExtension extends Extension
@@ -36,6 +38,9 @@ class DBStorageExtension extends Extension
             $this->getConfig($sc, $cache, $debug),
             new EventManager()
         ));
+
+        $sc->register('cache.DBStorage', Cache::class)
+            ->setArgument('adapter', $this->getCacheAdapter($sc));
 
         require_once __DIR__ .'/Factories/schemas.php';
         require_once __DIR__ .'/Factories/objects.php';
@@ -105,5 +110,17 @@ class DBStorageExtension extends Extension
         }
 
         return $config;
+    }
+
+    protected function getCacheAdapter(ContainerBuilder $sc)
+    {
+        try {
+            $adapter = $sc->get('config')->getConfig('database')['cache']['adapter'];
+        }
+        catch(\Exception $e) {
+            $adapter = new FilesystemAdapter();
+        }
+
+        return $adapter;
     }
 }

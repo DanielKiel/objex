@@ -93,16 +93,28 @@ class Cache
 
     /**
      * @param $key
-     * @throws CacheException
      * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function deleteItem($key) 
+    public function deleteItem($key)
     {
         if (! $this->adapter->hasItem($key)) {
-            throw new CacheException('cache item not exists: ' . $key);
+            return;
         }
 
         $this->adapter->deleteItem($key);
+    }
+
+    /**
+     * @param $tags
+     * @throws CacheException
+     */
+    public function invalidate($tags)
+    {
+        if (! method_exists($this->adapter, 'invalidate')) {
+            throw new CacheException('method invalidate not exists');
+        }
+
+        $this->adapter->invalidate($tags);
     }
 
     /**

@@ -11,6 +11,8 @@ class ObjectHandlingValidationTest extends \PHPUnit\Framework\TestCase
 {
     public function testValidation()
     {
+        $namespace = 'MyNamespace' . uniqid();
+
         $definition = [
             'foo' => [
                 'type' => 'text',
@@ -23,17 +25,17 @@ class ObjectHandlingValidationTest extends \PHPUnit\Framework\TestCase
             ]
         ];
 
-        setSchema('MyNamespace', [
+        setSchema($namespace, [
             'definition' => $definition
         ]);
 
         $this->expectException(\Objex\Validation\Exceptions\ValidationException::class);
 
-        saveObject('MyNamespace',[
+        saveObject($namespace,[
             'foo' => 'needed value',
             'bar' => 'value'
         ]);
 
-        deleteSchema('MyNamespace');
+        deleteSchema($namespace);
     }
 }

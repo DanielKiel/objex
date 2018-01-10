@@ -103,4 +103,18 @@ class ObjectSchemapTest extends TestCase
 
         deleteSchema('my-namespace_my-sub_my');
     }
+
+    public function testHelperMethods()
+    {
+        $namespace = 'MyNamespace\MySub\My';
+        $encoded = 'my-namespace_my-sub_my';
+
+        $this->assertEquals($encoded, encodeNamespace($namespace));
+
+        $this->assertEquals($namespace, decodeNamespace($encoded));
+
+        $this->assertEquals($namespace, decodeNamespace($namespace));
+
+        $this->assertEquals($encoded, encodeNamespace($encoded));
+    }
 }
