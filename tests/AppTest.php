@@ -8,8 +8,10 @@
 
 namespace Simplex\Tests;
 
+use GuzzleHttp\Client;
 use Objex\Core\Config\Config;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\Route;
 
 class AppTest extends TestCase
 {

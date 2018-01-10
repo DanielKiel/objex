@@ -74,6 +74,16 @@ php vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
 
 this will not do any migration yet - it is some natural doctrine handling here, not less or more
 
+## Routing 
+add a route must be at the moment be done via \Objex::getInstance()->addRoute($name, $route) method:
+
+```php
+\Objex::getInstance()->addRoute('wanted', new \Symfony\Component\Routing\Route('/wanted', array(
+    'name' => null,
+    '_controller' => 'Objex\Core\Controllers\HomeController::indexAction',
+)));
+```
+
 ## Console
 
 listing available commands

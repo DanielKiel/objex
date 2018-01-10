@@ -6,8 +6,6 @@
  * Time: 10:58
  */
 
-namespace Simplex\Tests;
-
 use Objex\Models\ObjectSchema;
 use PHPUnit\Framework\TestCase;
 

@@ -25,6 +25,9 @@ class ObjectSchema
     /** @ORM\Column(type="string", unique=true) **/
     protected $name;
 
+    /** @ORM\Column(type="string", unique=true) **/
+    protected $alias;
+
     /** @ORM\Column(type="json") **/
     protected $data;
 
@@ -45,11 +48,35 @@ class ObjectSchema
     }
 
     /**
-     * @param $token
+     * @param $name
      */
     public function setName($name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
+    /**
+     * alias will be auto-generated
+     * @param $name
+     */
+    protected function setAlias($name): void
+    {
+        if (! ctype_lower($name)) {
+            //$name =str_replace('\\', '_', $name);
+            $name = preg_replace('/\s+/u', '', ucwords($name));
+            $name = strtolower(preg_replace('/(.)(?=[A-Z])/u', '$1-', $name));
+            $name =str_replace('\\-', '_', $name);
+        }
+
+        $this->alias = $name;
     }
 
     /**
@@ -126,6 +153,14 @@ class ObjectSchema
         }
 
         return $config['validationType'];
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function forceAlias()
+    {
+        $this->setAlias($this->getName());
     }
 
     /**

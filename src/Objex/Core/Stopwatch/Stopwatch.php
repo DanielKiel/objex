@@ -28,6 +28,9 @@ class Stopwatch
         //Me not like clones! Me smash clones!
     }
 
+    /**
+     * @return self
+     */
     public static function getInstance()
     {
         if (!isset(static::$instance)) {

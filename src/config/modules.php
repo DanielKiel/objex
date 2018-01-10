@@ -7,6 +7,7 @@
  */
 
 return [
+    \Objex\Core\Middleware\JSONRequest::class,
     \Objex\ExpressionLanguage\ExpressionLanguageExtension::class,
     \Objex\DBStorage\DBStorageExtension::class,
     \Objex\Security\M2MSecurityExtension::class,

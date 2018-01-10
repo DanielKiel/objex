@@ -16,6 +16,9 @@ if (! function_exists('getSchema')) {
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     function getSchema(string $namespace) {
+        //it will be the alias which must be refactored to a valid Namespace
+        $namespace = decodeNamespace($namespace);
+
         $schema = objex()->get('DBStorage')
             ->getRepository('Objex\DBStorage\Models\ObjectSchema')
             ->findOneBy(['name' => $namespace]);
@@ -56,8 +59,27 @@ if (! function_exists('deleteSchema')) {
      * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     function deleteSchema(string $namespace) {
+        //it will be the alias which must be refactored to a valid Namespace
+        $namespace = decodeNamespace($namespace);
         return  $schema = objex()->get('DBStorage')
             ->getRepository('Objex\DBStorage\Models\ObjectSchema')
             ->delete($namespace);
+    }
+}
+
+if (! function_exists('decodeNamespace')) {
+    /**
+     * @param $namespace
+     * @return mixed|string
+     */
+    function decodeNamespace($namespace) {
+        $namespace = ucwords(str_replace(['-'], ' ', $namespace));
+        $namespace = str_replace(' ', '', $namespace);
+
+        $namespace = ucfirst($namespace);
+        $namespace = str_replace('_', ' ', $namespace);
+        $namespace = str_replace(' ', '\\', ucwords($namespace));
+
+        return $namespace;
     }
 }

@@ -6,8 +6,6 @@
  * Time: 10:58
  */
 
-namespace Simplex\Tests;
-
 use Objex\DBStorage\Models\ObjectSchema;
 use PHPUnit\Framework\TestCase;
 
@@ -83,12 +81,26 @@ class ObjectSchemapTest extends TestCase
             'configuration' => $configuration
         ]);
 
-        $schema = getSchema('MyNamespace');
+        $schema = getSchema('my-namespace');
 
         $this->assertEquals($definition, $schema->getDefinition());
         $this->assertEquals($configuration, $schema->getConfiguration());
         $this->assertEquals('min', $schema->getValidationType());
 
         deleteSchema('MyNamespace');
+
+
+        setSchema('MyNamespace\MySub\My',[
+            'definition' => $definition,
+            'configuration' => $configuration
+        ]);
+
+        $schema = getSchema('my-namespace_my-sub_my');
+
+        $this->assertEquals($definition, $schema->getDefinition());
+        $this->assertEquals($configuration, $schema->getConfiguration());
+        $this->assertEquals('min', $schema->getValidationType());
+
+        deleteSchema('my-namespace_my-sub_my');
     }
 }

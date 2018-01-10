@@ -23,7 +23,7 @@ class DBStorageSubscriber implements EventSubscriber
         return array(
             Events::prePersist,
             Events::preUpdate,
-            Events::preRemove
+            //Events::preRemove
         );
     }
 
