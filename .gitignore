@@ -4,4 +4,4 @@
 composer.lock
 /.env
 /src/modules/DBStorage/Cache/.files/
-/src/storage/cache/app/cache.sqlite
+
