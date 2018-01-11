@@ -18,6 +18,7 @@ use Symfony\Component\Cache\Adapter\DoctrineAdapter;
 use Objex\App;
 
 
+
 final class Objex {
     protected static $instance = null;
 

@@ -162,15 +162,10 @@ class ObjectSchema
      */
     public function removeObjects()
     {
-        $objects = objex()->get('DBStorage')
-            ->getRepository('Objex\DBStorage\Models\BaseObject')
-            ->findBy(['schema' => $this]);
-
         $em = objex()->get('DBStorage');
-        foreach ($objects as $object) {
-            $entity = $em->merge($object);
-            $em->remove($entity);
-        }
-        $em->flush();
+        $em->createQuery('delete from Objex\\DBStorage\\Models\\BaseObject o where o.schema = :schema')
+            ->setParameter('schema', $this)
+            ->execute();
+
     }
 }

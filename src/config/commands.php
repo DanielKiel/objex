@@ -12,5 +12,6 @@ return [
     \Objex\Core\Console\Commands\Debug\Listener::class,
     \Objex\Core\Console\Commands\Debug\Services::class,
 
-    \Objex\DBStorage\Console\Commands\EvaluateBasicAPIPerformance::class
+    \Objex\DBStorage\Console\Commands\EvaluateBasicAPIPerformance::class,
+    \Objex\DBStorage\Console\Commands\DeleteSchema::class
 ];
