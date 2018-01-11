@@ -39,16 +39,12 @@ if (! function_exists('bulkObjects')) {
     /**
      * @param string $namespace
      * @param array $data
-     * @return mixed
      * @throws Exception
-     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
-     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     function bulkObjects(string $namespace, array $data = []) {
-        return objex()
+        objex()
             ->get('DBStorage')
             ->getRepository('Objex\DBStorage\Models\BaseObject')
-            ->bulkObjects($namespace, $data);
+            ->bulk($namespace, $data);
     }
 }

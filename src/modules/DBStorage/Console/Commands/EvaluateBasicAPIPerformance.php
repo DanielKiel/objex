@@ -43,18 +43,15 @@ class EvaluateBasicAPIPerformance extends Command
             'definition' => [
                 'userName' => [
                     'type' => 'text',
-                    'validation' => [
-                        new Email(),
-                        new Required()
-                    ]
+                    'validation' => 'strlen(userName) > 3'
                 ],
                 'firstName' =>[
                     'type' => 'text',
-                    'validation' =>  new Length(['min' => 3])
+                    'validation' =>  'strlen(firstName) > 3'
                 ],
                 'lastName' => [
                     'type' => 'text',
-                    'validation' => new Length(['min' => 3])
+                    'validation' =>  'strlen(lastName) > 3'
                 ]
             ]
         ]);
@@ -75,25 +72,65 @@ class EvaluateBasicAPIPerformance extends Command
         $arg = $input->getArgument('requests');
         $requests = (!is_null($arg) ? (int) $arg : 100) + 1;
 
+        if ((int) $requests <= 101) {
+            $stopwatch->start('perform_post');
+            for ($index = 0; $index < $requests; $index++) {
+                $request = $client->request('POST',$baseUrl . 'api/debug_my-namespace',[
+                    'json' => [
+                        'userName' => 'dk.projects.manager@gmail.com',
+                        'firstName' => 'Daniel',
+                        'lastName' => 'Koch'
+                    ],
+                    'headers' => [
+                        'X-Auth-Token' => $token
+                    ]
+                ]);
 
-        $stopwatch->start('perform_post');
-        for ($index = 0; $index < $requests; $index++) {
-            $request = $client->request('POST',$baseUrl . 'api/debug_my-namespace',[
-                'json' => [
-                    'userName' => 'dk.projects.manager@gmail.com',
-                    'firstName' => 'Daniel',
-                    'lastName' => 'Koch'
-                ],
-                'headers' => [
-                    'X-Auth-Token' => $token
-                ]
-            ]);
-
-            if ($request->getStatusCode() !== 200) {
-                $output->writeln('wrong request');
+                if ($request->getStatusCode() !== 200) {
+                    $output->writeln('wrong request');
+                }
             }
+            $event = $stopwatch->stop('perform_post');
+
+            $helper = new Table($output);
+            $helper->setHeaders(['obj per sec',  's', 'ms', 'memory']);
+
+            $sec = round($event->getDuration() / 1000, 2);
+            $o_per_m = round((int) $requests / $sec, 2);
+
+            $helper->addRow([$o_per_m, $sec,$event->getDuration(), $event->getMemory()]);
+
+            //deleteSchema('Debug\MyNamespace');
+
+            $output->writeln('performed ' . ( (int) $requests - 1 ). ' post requests');
+            $helper->render();
         }
-        $event = $stopwatch->stop('perform_post');
+        else {
+            $output->writeln('avoid performing single post requests to store such a lot of objects');
+        }
+
+        $bulk = [];
+        $stopwatch->start('perform_bulk');
+        for ($index = 0; $index < $requests; $index++) {
+            array_push($bulk, [
+                'userName' => 'dk.projects.manager@gmail.com',
+                'firstName' => 'Daniel',
+                'lastName' => 'Koch'
+            ]);
+        }
+
+        $request = $client->request('POST',$baseUrl . 'api/debug_my-namespace/bulk',[
+            'json' => $bulk,
+            'headers' => [
+                'X-Auth-Token' => $token
+            ]
+        ]);
+
+        if ($request->getStatusCode() !== 200) {
+            $output->writeln('wrong request');
+        }
+
+        $event = $stopwatch->stop('perform_bulk');
 
         $helper = new Table($output);
         $helper->setHeaders(['obj per sec',  's', 'ms', 'memory']);
@@ -105,13 +142,14 @@ class EvaluateBasicAPIPerformance extends Command
 
         //deleteSchema('Debug\MyNamespace');
 
-        $output->writeln('performed ' . ( (int) $requests - 1 ). ' post requests');
+        $output->writeln('performed a bulk request');
         $helper->render();
 
-//
+
+
         $stopwatch->start('perform_save');
         for ($index = 0; $index < $requests; $index++) {
-            saveObject('debug_my-namespace',[
+            $object = saveObject('debug_my-namespace',[
                 'userName' => 'dk.projects.manager@gmail.com',
                 'firstName' => 'Daniel',
                 'lastName' => 'Koch'
@@ -128,6 +166,30 @@ class EvaluateBasicAPIPerformance extends Command
         $helper->addRow([$o_per_m, $sec,$event->getDuration(), $event->getMemory()]);
 
         $output->writeln('performed ' . ( (int) $requests - 1 ). ' saving calls');
+        $helper->render();
+
+        $bulk = [];
+        $stopwatch->start('perform_bulk');
+        for ($index = 0; $index < $requests; $index++) {
+            array_push($bulk, [
+                'userName' => 'dk.projects.manager@gmail.com',
+                'firstName' => 'Daniel',
+                'lastName' => 'Koch'
+            ]);
+        }
+        bulkObjects('debug_my-namespace',$bulk);
+
+        $event = $stopwatch->stop('perform_bulk');
+
+        $helper = new Table($output);
+        $helper->setHeaders(['obj per sec',  's', 'ms', 'memory']);
+
+        $sec = round($event->getDuration() / 1000, 2);
+        $o_per_m = round((int) $requests / $sec, 2);
+
+        $helper->addRow([$o_per_m, $sec,$event->getDuration(), $event->getMemory()]);
+
+        $output->writeln('performed a bulk operation');
         $helper->render();
     }
 }

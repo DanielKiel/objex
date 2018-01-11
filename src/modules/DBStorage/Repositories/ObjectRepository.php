@@ -30,14 +30,9 @@ class ObjectRepository extends EntityRepository implements ObjectContract
     /**
      * @param string $namespace
      * @param array $data
-     * @return object
+     * @return \stdClass
      * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Exception
-     * @throws \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
-     * @throws \Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException
      */
     public function save(string $namespace, array $data = []): \stdClass
     {
@@ -74,12 +69,58 @@ class ObjectRepository extends EntityRepository implements ObjectContract
         ], $object->getData());
     }
 
+    public function bulk(string $namespace, array $objects = [], $flushAt = 1000)
+    {
+        $schema = getSchema($namespace);
+        $token = hash('sha512', time());
+        $result = [];
+
+        $counter = 0;
+        foreach ($objects as $data) {
+            $counter++;
+
+            $object = null;
+            if (array_key_exists('id', $data)) {
+                $object = objex()->get('DBStorage')
+                    ->getRepository('Objex\DBStorage\Models\BaseObject')
+                    ->find($data['id']);
+
+                unset($data['id']);
+            }
+
+            if (! $object instanceof BaseObject) {
+                $object = new BaseObject();
+            }
+
+            $object->setToken($token);
+            $object->setSchema($schema);
+            $object->setData($data);
+
+            array_push($result, $this->getEntityManager()->merge($object));
+
+            if ($counter === $flushAt) {
+                try {
+                    $this->getEntityManager()->flush();
+                }
+                catch(\Exception $e) {
+                    dump($e);
+                }
+            }
+        }
+
+        //there may be a rest
+        try {
+            $this->getEntityManager()->flush();
+        }
+        catch(\Exception $e) {
+            dump($e);
+        }
+    }
+
     /**
      * @param string $namespace
      * @param int $objectId
      * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function delete(string $namespace, int $objectId)
     {

@@ -67,6 +67,23 @@ class APIController
     }
 
     /**
+     * @param Request $request
+     * @param $alias
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function bulkAction(Request $request, $alias)
+    {
+        $data = $request->request->all();
+
+        $result = bulkObjects($alias, $data);
+
+        return new JsonResponse([
+            $result
+        ]);
+    }
+
+    /**
      * @param $alias
      * @param $id
      * @return JsonResponse

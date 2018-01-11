@@ -73,6 +73,11 @@ class DBStorageExtension extends Extension
             'name' => null,
             '_controller' => 'Objex\DBStorage\Controllers\APIController::deleteAction',
         )))->setMethods('DELETE'));
+
+        \Objex::getInstance()->addRoute('api.bulk', (new \Symfony\Component\Routing\Route('/api/{alias}/bulk', array(
+            'name' => null,
+            '_controller' => 'Objex\DBStorage\Controllers\APIController::bulkAction',
+        )))->setMethods('POST'));
     }
 
     /**
