@@ -49,8 +49,21 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
             return;
         }
 
+        try {
+            $machine = objex()->get('cache')
+                ->getItem('machine.' . $apiKey);
+        }
+        catch(\Exception $e) {
+            $machine = objex()->get('cache')
+                ->setExpiresAfter(3600)
+                ->getItem('machine.' . $apiKey, $default = $userProvider->loadUserByUsername($apiKey));
+        }
+        finally {
+            $machine = $userProvider->loadUserByUsername($apiKey);
+        }
+
         // if a User object, checkCredentials() is called
-        return $userProvider->loadUserByUsername($apiKey);
+        return $machine;
     }
 
     public function checkCredentials($credentials, UserInterface $user)

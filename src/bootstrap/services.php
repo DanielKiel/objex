@@ -13,6 +13,8 @@ use Symfony\Component\HttpKernel;
 use Symfony\Component\Routing;
 use Symfony\Component\EventDispatcher;
 use Symfony\Component\Dotenv\Dotenv;
+use Doctrine\Common\Cache\SQLite3Cache;
+use Symfony\Component\Cache\Adapter\DoctrineAdapter;
 use Objex\App;
 
 
@@ -52,7 +54,7 @@ final class Objex {
 
         $this->sc = new DependencyInjection\ContainerBuilder();
 
-        $this->registerCoreFunctionallity();
+        $this->registerCoreFunctionality();
 
         $this->registerBaseWebHandling();
 
@@ -93,7 +95,7 @@ final class Objex {
         return include __DIR__.'/../routes.php';
     }
 
-    protected function registerCoreFunctionallity()
+    protected function registerCoreFunctionality()
     {
         $dotenv = new Dotenv();
         $dotenv->load(__DIR__ .'/../../.env');
@@ -102,8 +104,10 @@ final class Objex {
 
         $this->sc->set('crypto', new \Objex\Core\Cryptography\Cryptography());
 
+        $cacheProvider = new SQLite3Cache(new SQLite3(base_path('storage/cache/app/') . 'cache.sqlite'), 'caches');
+
         $this->sc->register('cache', \Objex\Core\Cache\Cache::class)
-            ->setArgument('adapter', new \Symfony\Component\Cache\Adapter\FilesystemAdapter());
+            ->setArgument('adapter', new DoctrineAdapter($cacheProvider));
     }
 
     protected function boot()

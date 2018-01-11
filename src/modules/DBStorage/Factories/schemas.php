@@ -35,10 +35,6 @@ if (! function_exists('getSchema')) {
                 ->findOneBy(['name' => $namespace]);
         }
 
-        $schema = objex()->get('DBStorage')
-            ->getRepository('Objex\DBStorage\Models\ObjectSchema')
-            ->findOneBy(['name' => $namespace]);
-
         if (! $schema instanceof \Objex\DBStorage\Models\ObjectSchema) {
             //@TODO make some clear Exceptions
             throw new \Exception('no schema defined for' . $namespace);

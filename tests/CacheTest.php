@@ -6,8 +6,6 @@
  * Time: 16:58
  */
 
-namespace Simplex\Tests;
-
 
 use Objex\Core\Cache\Cache;
 use Objex\Core\Cache\Exceptions\CacheException;
@@ -79,7 +77,7 @@ class CacheTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('bar', $item->foo);
 
-        sleep(1);
+        sleep(2);
 
         $this->expectException(CacheException::class);
         $cache->getItem('cached.item');

@@ -9,6 +9,7 @@
 namespace Objex\DBStorage;
 
 
+use Doctrine\Common\Cache\FilesystemCache;
 use Objex\Core\Cache\Cache;
 use Objex\Core\Events\Booting;
 use Objex\Core\Modules\Extension;
@@ -100,6 +101,7 @@ class DBStorageExtension extends Extension
         $config->setMetadataCacheImpl($cache);
         $driverImpl = $config->newDefaultAnnotationDriver($sc->get('config')->getConfig('database')['entity_paths'], false);
         $config->setMetadataDriverImpl($driverImpl);
+        $config->setMetadataCacheImpl(new FilesystemCache(__DIR__ . '/Cache/.files'));
         $config->setQueryCacheImpl($cache);
         $config->setProxyDir(__DIR__.'/../Proxies');
         $config->setProxyNamespace('Objex\Proxies');

@@ -67,9 +67,9 @@ class EvaluateBasicAPIPerformance extends Command
         $requests = (!is_null($arg) ? (int) $arg : 100) + 1;
 
 
-        $stopwatch->start('perform');
+        $stopwatch->start('perform_post');
         for ($index = 0; $index < $requests; $index++) {
-            $client->request('POST',$baseUrl . 'api/my-namespace',[
+            $request = $client->request('POST',$baseUrl . 'api/my-namespace',[
                 'json' => [
                     'userName' => 'dk.projects.manager@gmail.com',
                     'firstName' => 'Daniel',
@@ -79,16 +79,24 @@ class EvaluateBasicAPIPerformance extends Command
                     'X-Auth-Token' => $token
                 ]
             ]);
+
+            if ($request->getStatusCode() !== 200) {
+                $output->writeln('wrong request');
+            }
         }
-        $event = $stopwatch->stop('perform');
+        $event = $stopwatch->stop('perform_post');
 
         $helper = new Table($output);
-        $helper->setHeaders(['s', 'ms', 'memory']);
-        $helper->addRow([round($event->getDuration() / 1000, 2),$event->getDuration(), $event->getMemory()]);
+        $helper->setHeaders(['obj per sec',  's', 'ms', 'memory']);
 
-        deleteSchema('MyNamespace');
+        $sec = round($event->getDuration() / 1000, 2);
+        $o_per_m = round((int) $requests / $sec, 2);
 
-        $output->writeln('performed ' . ( (int) $requests - 1 ). ' requests');
+        $helper->addRow([$o_per_m, $sec,$event->getDuration(), $event->getMemory()]);
+
+        //deleteSchema('MyNamespace');
+
+        $output->writeln('performed ' . ( (int) $requests - 1 ). ' post requests');
         $helper->render();
     }
 }
