@@ -108,6 +108,7 @@ final class Objex {
 
         $this->sc->register('cache', \Objex\Core\Cache\Cache::class)
             ->setArgument('adapter', new DoctrineAdapter($cacheProvider));
+
     }
 
     protected function boot()

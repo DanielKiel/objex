@@ -39,14 +39,23 @@ class EvaluateBasicAPIPerformance extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        setSchema('MyNamespace',[
+        setSchema('Debug\MyNamespace',[
             'definition' => [
                 'userName' => [
-                    new Email(),
-                    new Required()
+                    'type' => 'text',
+                    'validation' => [
+                        new Email(),
+                        new Required()
+                    ]
                 ],
-                'firstName' => new Length(['min' => 3]),
-                'lastName' => new Length(['min' => 3])
+                'firstName' =>[
+                    'type' => 'text',
+                    'validation' =>  new Length(['min' => 3])
+                ],
+                'lastName' => [
+                    'type' => 'text',
+                    'validation' => new Length(['min' => 3])
+                ]
             ]
         ]);
 
@@ -69,7 +78,7 @@ class EvaluateBasicAPIPerformance extends Command
 
         $stopwatch->start('perform_post');
         for ($index = 0; $index < $requests; $index++) {
-            $request = $client->request('POST',$baseUrl . 'api/my-namespace',[
+            $request = $client->request('POST',$baseUrl . 'api/debug_my-namespace',[
                 'json' => [
                     'userName' => 'dk.projects.manager@gmail.com',
                     'firstName' => 'Daniel',
@@ -94,9 +103,31 @@ class EvaluateBasicAPIPerformance extends Command
 
         $helper->addRow([$o_per_m, $sec,$event->getDuration(), $event->getMemory()]);
 
-        //deleteSchema('MyNamespace');
+        //deleteSchema('Debug\MyNamespace');
 
         $output->writeln('performed ' . ( (int) $requests - 1 ). ' post requests');
+        $helper->render();
+
+//
+        $stopwatch->start('perform_save');
+        for ($index = 0; $index < $requests; $index++) {
+            saveObject('debug_my-namespace',[
+                'userName' => 'dk.projects.manager@gmail.com',
+                'firstName' => 'Daniel',
+                'lastName' => 'Koch'
+            ]);
+        }
+        $event = $stopwatch->stop('perform_save');
+
+        $helper = new Table($output);
+        $helper->setHeaders(['obj per sec',  's', 'ms', 'memory']);
+
+        $sec = round($event->getDuration() / 1000, 2);
+        $o_per_m = round((int) $requests / $sec, 2);
+
+        $helper->addRow([$o_per_m, $sec,$event->getDuration(), $event->getMemory()]);
+
+        $output->writeln('performed ' . ( (int) $requests - 1 ). ' saving calls');
         $helper->render();
     }
 }
